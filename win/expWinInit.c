@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
  * expWinInit.c --
  *
- *	OS specific inits.
+ *	Win OS specific inits.
  *
  * ----------------------------------------------------------------------------
  *
@@ -67,6 +67,7 @@ static ExpWinProcs unicodeProcs = {
 };
 
 ExpWinProcs *expWinProcs = &asciiProcs;
+tclWinMakeFileProcType tclWinMakeFileProc;
 
 /*
  *----------------------------------------------------------------------
@@ -86,4 +87,8 @@ ExpWinInit(void)
     if (TclWinGetPlatformId() == VER_PLATFORM_WIN32_NT) {    
 	expWinProcs = &unicodeProcs;
     }
+
+    /* need TclWinMakeFile() from the outside... bastards! */
+    tclWinMakeFileProc = (tclWinMakeFileProcType)
+	    GetProcAddress(TclWinGetTclInstance(), "TclWinMakeFile");
 }

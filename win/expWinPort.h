@@ -91,6 +91,9 @@
 #   endif
 #endif
 
+typedef TclFile (__cdecl *tclWinMakeFileProcType)(HANDLE handle);
+extern tclWinMakeFileProcType tclWinMakeFileProc;
+
 
 #include "expPlatDecls.h"
 #include "expIntPlatDecls.h"

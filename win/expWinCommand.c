@@ -565,7 +565,7 @@ Exp_SpawnCmd(ClientData clientData,Tcl_Interp *interp,int argc,char **argv)
     if (!useSocket) {
 	HANDLE dupe;
 
-	masterRFile = TclWinMakeFile(hSlaveDrv);
+	masterRFile = tclWinMakeFileProc(hSlaveDrv);
 
 	/*
 	 *  We need to make a duplicate, because the handles are closed
@@ -575,7 +575,7 @@ Exp_SpawnCmd(ClientData clientData,Tcl_Interp *interp,int argc,char **argv)
 	DuplicateHandle(GetCurrentProcess(), hSlaveDrv,
 		GetCurrentProcess(), &dupe, 0, FALSE,
 		DUPLICATE_SAME_ACCESS);
-	masterWFile = TclWinMakeFile(dupe);
+	masterWFile = tclWinMakeFileProc(dupe);
 
 	channel = TclpCreateCommandChannel(masterRFile, masterWFile, NULL, 0, NULL);
     }
