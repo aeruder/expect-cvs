@@ -34,6 +34,16 @@ Message::Message()
 {
 }
 
+Message::~Message()
+{
+    switch (type) {
+    case TYPE_NORMAL:
+    case TYPE_ERROR:
+    case TYPE_WARNING:
+	delete bytes;
+    }
+}
+
 Message::Message(Message &other)
 {
     type = other.type;

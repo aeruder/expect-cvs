@@ -35,16 +35,6 @@ public:
     virtual void Write(Message *) = 0;
 };
 
-class SpawnMailboxClient : public SpawnClientTransport
-{
-public:
-    SpawnMailboxClient(const char *name, CMclQueue<Message *> &_mQ);
-    virtual void Write(Message *);
-private:
-    CMclMailbox *MasterToExpect;
-    CMclMailbox *MasterFromExpect;
-    CMclQueue<Message *> &mQ;
-};
 
 class ReadPipe : public CMclThreadHandler
 {

@@ -29,7 +29,6 @@
 #include "expWinSpawnClient.hpp"
 
 
-
 SpawnStdioClient::SpawnStdioClient(const char *name, CMclQueue<Message *> &_mQ)
     : mQ(_mQ)
 {
@@ -47,7 +46,7 @@ SpawnStdioClient::~SpawnStdioClient()
     if (dwExit == STILL_ACTIVE) {
 	// by cute convention, terminate threads with a 666.
 	//
-	readThread->Terminate(666);
+	readThread->Terminate(0x666);
     }
     delete reader;
 }
@@ -60,12 +59,13 @@ SpawnStdioClient::Write(Message *what)
 
     switch (what->type) {
     case Message::TYPE_NORMAL:
-	where = hStdOut;
-    case Message::TYPE_ERROR:
     case Message::TYPE_WARNING:
+	where = hStdOut; break;
+    case Message::TYPE_ERROR:
 	where = hStdErr;
     }
     WriteFile(where, what->bytes, what->length, &dwWritten, 0L);
+    delete what;
 }
 
 ReadPipe::ReadPipe(CMclQueue<Message *> &_mQ)
@@ -92,7 +92,7 @@ again:
 	goto done;
     }
     msg = new Message;
-    msg->bytes = readBuf;
+    msg->bytes = (CHAR *) readBuf;
     msg->length = dwRead;
     msg->type = Message::TYPE_INSTREAM;
     mQ.Put(msg);

@@ -120,6 +120,7 @@ DllMain (HINSTANCE hInst, ULONG ulReason, LPVOID lpReserved)
 	interrupt = new CMclEvent();
 	inject = new Injector(console, interrupt);
 	injectorThread = new CMclThread(inject);
+	/*MessageBox(NULL, "hi mom!", "lala", MB_OK|MB_SETFOREGROUND);*/
 	break;
     case DLL_PROCESS_DETACH:
 	interrupt->Set();
