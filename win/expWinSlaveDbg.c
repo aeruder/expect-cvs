@@ -527,7 +527,7 @@ ExpSlaveDebugThread(LPVOID lparg)
 
     /* Make sure the master does not ignore Ctrl-C */
     SetConsoleCtrlHandler(NULL, FALSE);
-    arg->result = ExpCreateProcess(
+    arg->result = ExpWinCreateProcess(
 	    arg->argc,
 	    arg->argv,
 	    arg->slaveStdin,
