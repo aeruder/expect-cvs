@@ -288,7 +288,6 @@ extern int exp_disconnected;		/* proc. disc'd from controlling tty */
 
 
 /* protos not yet moved to the Stubs table */
-TCL_EXTERN(int)		exp_getpidproc _ANSI_ARGS_((void));
 TCL_EXTERN(char *)	exp_get_var _ANSI_ARGS_((Tcl_Interp *,char *));
 TCL_EXTERN(int)		exp_one_arg_braced _ANSI_ARGS_((Tcl_Obj *));
 TCL_EXTERN(int)		exp_eval_with_one_arg _ANSI_ARGS_((ClientData,
