@@ -33,10 +33,10 @@ Message::Message()
     : bytes(0L), length(0), type(TYPE_BLANK)
 {
 }
-
+/*
 Message::Message(Message &other)
 {
     type = other.type;
     bytes = other.bytes;
     length = other.length;
-}
+}*/

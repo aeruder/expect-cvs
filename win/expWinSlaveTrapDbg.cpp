@@ -34,16 +34,9 @@
  */
 
 #include "expWinInt.h"
-#include <stddef.h>
-#include <assert.h>
-
-#include "expWinConsoleDebugger.hpp"
-#ifdef _MSC_VER
-#   pragma comment (lib, "imagehlp.lib")
-#endif
 
 
-ExpSlaveTrapDbg::ExpSlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message> &_mQ)
+ExpSlaveTrapDbg::ExpSlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message *> &_mQ)
     : mQ(_mQ)
 {
     debuggerThread = new CMclThread(new ConsoleDebugger(argc, argv, _mQ));

@@ -1,8 +1,7 @@
 /* ----------------------------------------------------------------------------
- * expWinMessage.hpp --
+ * expWinSpawnClient.hpp --
  *
- *	Declare the Message class.  This is what is passed over the thread-safe
- *	event queue.
+ *	Declares the SpawnClient classes.
  *
  * ----------------------------------------------------------------------------
  *
@@ -27,21 +26,34 @@
  * ----------------------------------------------------------------------------
  */
 
-#ifndef INC_expWinMessage_hpp__
-#define INC_expWinMessage_hpp__
+#include "expWinMessage.hpp"
+#include "Mcl/include/CMcl.h"
 
-#include <stddef.h>	// for size_t
-
-class Message
+class SpawnClientTransport
 {
 public:
-    Message();
-    //Message(Message &);
-
-    enum Mode {TYPE_BLANK, TYPE_NORMAL, TYPE_ERROR, TYPE_INSTREAM, TYPE_FUNCTION};
-    Mode type;
-    unsigned char *bytes;
-    size_t length;
+    virtual void Write(Message *) = 0;
 };
 
-#endif
+class SpawnMailboxClient : public SpawnClientTransport
+{
+public:
+    SpawnMailboxClient(const char *name, CMclQueue<Message *> &_mQ);
+    virtual void Write(Message *);
+private:
+    CMclMailbox *MasterToExpect;
+    CMclMailbox *MasterFromExpect;
+    CMclQueue<Message *> &mQ;
+};
+
+class SpawnPipeClient : public SpawnClientTransport
+{
+public:
+    SpawnPipeClient(const char *name, CMclQueue<Message *> &_mQ);
+    virtual void Write(Message *);
+private:
+    CMclQueue<Message *> &mQ;
+    HANDLE hStdOut;
+    HANDLE hStdErr;
+    HANDLE hStdIn;
+};

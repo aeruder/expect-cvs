@@ -1,8 +1,7 @@
 /* ----------------------------------------------------------------------------
- * expWinMessage.hpp --
+ * expWinSlaveTrap.hpp --
  *
- *	Declare the Message class.  This is what is passed over the thread-safe
- *	event queue.
+ *	Declares the SlaveTrap classes.
  *
  * ----------------------------------------------------------------------------
  *
@@ -27,21 +26,27 @@
  * ----------------------------------------------------------------------------
  */
 
-#ifndef INC_expWinMessage_hpp__
-#define INC_expWinMessage_hpp__
+#ifndef INC_expWinSlaveTrap_hpp__
+#define INC_expWinSlaveTrap_hpp__
 
-#include <stddef.h>	// for size_t
+#include "expWinMessage.hpp"
+#include "Mcl/include/CMcl.h"
 
-class Message
-{
+class ExpSlaveTrap {
+};
+
+/*
+class ExpSlaveTrapPipe : public ExpSlaveTrap {
 public:
-    Message();
-    //Message(Message &);
+    ExpSlaveTrapPipe(int argc, char * const argv[], CMclQueue<Message> &_mQ);
+};*/
 
-    enum Mode {TYPE_BLANK, TYPE_NORMAL, TYPE_ERROR, TYPE_INSTREAM, TYPE_FUNCTION};
-    Mode type;
-    unsigned char *bytes;
-    size_t length;
+class ExpSlaveTrapDbg : public ExpSlaveTrap {
+public:
+    ExpSlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message *> &_mQ);
+private:
+    CMclQueue<Message *> &mQ;
+    CMclThreadAutoPtr debuggerThread;
 };
 
 #endif

@@ -120,55 +120,12 @@ extern TCL_CPP void ExpDynloadTclStubs (void);
 
 
 #ifdef __cplusplus
-#include "./Mcl/include/CMcl.h"
-#include "expWinUtils.hpp"
-#include "expWinMessage.hpp"
-
-
-class SpawnClientTransport
-{
-public:
-    virtual void Write(Message &) = 0;
-};
-
-class SpawnMailboxClient : public SpawnClientTransport
-{
-public:
-    SpawnMailboxClient(const char *name, CMclQueue<Message> &_mQ);
-    virtual void Write(Message &);
-private:
-    CMclMailbox *MasterToExpect;
-    CMclMailbox *MasterFromExpect;
-    CMclQueue<Message> &mQ;
-};
-
-class SpawnPipeClient : public SpawnClientTransport
-{
-public:
-    SpawnPipeClient(const char *name, CMclQueue<Message> &_mQ);
-    virtual void Write(Message &);
-private:
-    CMclQueue<Message> &mQ;
-    HANDLE hStdOut;
-    HANDLE hStdErr;
-    HANDLE hStdIn;
-};
-
-
-class ExpSlaveTrap {
-};
-class ExpSlaveTrapPipe : public ExpSlaveTrap {
-public:
-    ExpSlaveTrapPipe(int argc, char * const argv[], CMclQueue<Message> &_mQ);
-};
-
-class ExpSlaveTrapDbg : public ExpSlaveTrap {
-public:
-    ExpSlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message> &_mQ);
-private:
-    CMclQueue<Message> &mQ;
-    CMclThreadAutoPtr debuggerThread;
-};
+#   include "Mcl/include/CMcl.h"
+#   include "expWinUtils.hpp"
+#   include "expWinMessage.hpp"
+#   include "expWinConsoleDebugger.hpp"
+#   include "expWinSpawnClient.hpp"
+#   include "expWinSlaveTrap.hpp"
 #endif /* __cplusplus */
 
 #endif /* _EXPWINSLAVE_HPP */

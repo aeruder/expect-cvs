@@ -106,7 +106,7 @@ ConsoleDebugger::OnBeep(Process *proc, ThreadInfo *threadInfo,
     CHAR buf[2];
 
     if (direction == BREAK_IN) {
-	// Modify the arguments so a beep doesn't sound on the server
+	// Modify the arguments so a beep doesn't sound in the slave.
 	threadInfo->args[1] = 0;
     } else if (direction == BREAK_OUT) {
 	if (*returnValue == 0) {
