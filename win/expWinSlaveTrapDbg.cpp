@@ -36,9 +36,12 @@
 #include "expWinSlave.hpp"
 
 
-ExpSlaveTrapDbg::ExpSlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message *> &_mQ)
+SlaveTrapDbg::SlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message *> &_mQ)
     : mQ(_mQ)
 {
     debuggerThread = new CMclThread(new ConsoleDebugger(argc, argv, _mQ));
 }
 
+void SlaveTrapDbg::Write(Message *msg)
+{
+}
