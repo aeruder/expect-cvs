@@ -1570,10 +1570,15 @@ ConsoleDebugger::OnXBreakpoint(Process *proc, LPDEBUG_EVENT pDebEvent)
 	}
     }
 
+    if (brkpt == 0L) {
+	// shouldn't happen, but does..
+	return;
+    }
+
     context.ContextFlags = CONTEXT_FULL;
     GetThreadContext(tinfo->hThread, &context);
 
-    if (! brkpt->returning) {
+    if (!brkpt->returning) {
 	Breakpoint *bpt;
 	// Get the arguments to the function and store them in the thread
 	// specific data structure.
