@@ -426,7 +426,12 @@ EXTERN int exp_ttycopy;			/* copy tty parms from /dev/tty */
 EXTERN int exp_ttyinit;			/* set tty parms to sane state */
 EXTERN int exp_console;			/* redirect console */
 
-EXTERN jmp_buf exp_readenv;		/* for interruptable read() */
+#ifdef HAVE_SIGLONGJMP
+sigjmp_buf exp_readenv;		/* for interruptable read() */
+#else
+jmp_buf exp_readenv;		/* for interruptable read() */
+#endif /* HAVE_SIGLONGJMP */
+
 EXTERN int exp_reading;			/* whether we can longjmp or not */
 #define EXP_ABORT	1		/* abort read */
 #define EXP_RESTART	2		/* restart read */
