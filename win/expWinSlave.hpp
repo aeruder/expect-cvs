@@ -39,8 +39,11 @@ void ShutdownTcl (void);
 #include "slavedrvmc.h"
 #include "expWinUtils.hpp"
 #include "expWinMessage.hpp"
-#include "expWinSpawnClient.hpp"
+#include "expWinClientTransport.hpp"
 #include "expWinConsoleDebugger.hpp"
 #include "expWinSlaveTrap.hpp"
+
+void MapToKeys (Message *msg, CMclQueue<Message *> &mQ);
+
 
 #endif // INC_expWinSlave_hpp__
