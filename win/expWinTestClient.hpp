@@ -40,6 +40,7 @@ public:
 // Forward reference.
 class ReadPipe;
 class ReadCon;
+class ReadConWithSwitching;
 
 class ClientStdio : public TestClient
 {
@@ -78,4 +79,7 @@ public:
 private:
     CMclQueue<Message *> &mQ;
     HANDLE ConOut, ConIn, ConInteract, oldBuffer;
+    ReadConWithSwitching *reader;
+    CMclEvent Stop;
+    CMclThread *readThread;
 };

@@ -67,8 +67,8 @@ private:
 	// Wait for any (either) to signal.
 	dwRet = groupedHandles.Wait(FALSE, INFINITE);
 
-	if (!CMclWaitSucceeded(dwRet, groupedHandles.GetCount()) ||
-		CMclWaitSucceededIndex(dwRet) == 0) {
+	if (!CMclWaitSucceeded(dwRet, 2) ||
+		CMclWaitSucceeded(dwRet, 2) && CMclWaitSucceededIndex(dwRet) == 0) {
 	    // stop event or some other error, so die.
 	    return 0;
 	}
