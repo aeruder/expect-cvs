@@ -17,6 +17,16 @@
 
 /* !BEGIN!: Do not edit below this line. */
 
+ExpIntStubs expIntStubs = {
+    TCL_STUB_MAGIC,
+    NULL,
+};
+
+ExpIntPlatStubs expIntPlatStubs = {
+    TCL_STUB_MAGIC,
+    NULL,
+};
+
 ExpPlatStubs expPlatStubs = {
     TCL_STUB_MAGIC,
     NULL,
@@ -33,6 +43,13 @@ ExpStubs expStubs = {
     &expStubHooks,
     Expect_Init, /* 0 */
     Expect_SafeInit, /* 1 */
+    exp_parse_argv, /* 2 */
+    exp_interpreter, /* 3 */
+    exp_interpret_cmdfile, /* 4 */
+    exp_interpret_cmdfilename, /* 5 */
+    exp_interpret_rcfiles, /* 6 */
+    exp_cook, /* 7 */
+    expCloseOnExec, /* 8 */
 };
 
 /* !END!: Do not edit above this line. */

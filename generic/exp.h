@@ -182,6 +182,12 @@ TCL_EXTERN(int)		exp_getpidproc _ANSI_ARGS_((void));
 
 #include "expDecls.h"
 
+/*
+ * Include platform specific public function declarations that are
+ * accessible via the stubs table.
+ */
+
+#include "expPlatDecls.h"
 
 /*
  * Exp_InitStubs is used by apps/extensions that want to link

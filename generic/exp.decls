@@ -27,21 +27,44 @@ declare 0 generic {
 declare 1 generic {
 	int Expect_SafeInit (Tcl_Interp *interp)
 }
+declare 2 generic {
+	void exp_parse_argv (Tcl_Interp *interp, int argc, char **argv)
+}
+declare 3 generic {
+	int exp_interpreter (Tcl_Interp *interp, Tcl_Obj *eofObj)
+}
+declare 4 generic {
+	int exp_interpret_cmdfile (Tcl_Interp *interp, Tcl_Channel file)
+}
+declare 5 generic {
+	int exp_interpret_cmdfilename (Tcl_Interp *interp, char *filename)
+}
+declare 6 generic {
+	void exp_interpret_rcfiles (Tcl_Interp *interp, int my_rc, int sys_rc)
+}
+declare 7 generic {
+	char *exp_cook (char *s, int *len)
+}
+declare 8 generic {
+	void expCloseOnExec (int fd)
+}
 
 interface expPlat
 
 #====================================================================================
 # UNIX specific publics.
 
-declare 0 unix {
-}
 
 #====================================================================================
 # WIN32 specific publics.
-
 
 
 #====================================================================================
 # MAC specific publics.
 
 ### You nutts!!  can't do Mac... sorry..
+
+
+interface expInt
+
+interface expIntPlat
