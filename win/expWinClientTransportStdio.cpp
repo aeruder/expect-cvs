@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
- * expWinSpawnStdioClient.cpp --
+ * expWinClientTransportStdio.cpp --
  *
- *	Simple standard IO as our IPC mechanism.
+ *	Simple standard I/O as our client.
  *
  * ----------------------------------------------------------------------------
  *
@@ -85,7 +85,7 @@ ClientStdio::~ClientStdio()
 
     readThread->GetExitCode(&dwExit);
     if (dwExit == STILL_ACTIVE) {
-	readThread->Terminate(0x128);
+	readThread->Terminate(128);
     }
 }
 
