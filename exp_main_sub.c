@@ -159,9 +159,6 @@ Tcl_Interp *interp;
 {
 	Interp *iPtr = (Interp *)interp;
 
-#if TCL_MAJOR_VERSION < 8
-	return iPtr->curEventNum+1;
-#else
 	/* unncessarily tricky coding - if nextid isn't defined,
 	   maintain our own static version */
 
@@ -172,7 +169,6 @@ Tcl_Interp *interp;
 		(void) sscanf(nextidstr,"%d",&nextid);
 	}
 	return ++nextid;
-#endif
 }
 
 /* this stupidity because Tcl needs commands in writable space */

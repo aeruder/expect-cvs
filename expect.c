@@ -84,7 +84,7 @@ struct ecase {	/* case for expect command */
 #define CASE_NORM	1
 #define CASE_LOWER	2
 	int Case;	/* convert case before doing match? */
-	regexp *re;	/* if this is 0, then pattern match via glob */
+	Tcl_RegExp re;	/* if this is 0, then pattern match via glob */
 };
 
 /* descriptions of the pattern types, used for debugging */
@@ -380,11 +380,7 @@ char **argv;
 		for (;isspace(*a);a++) {
 			if (*a == '\n') *a = ' ';
 		}
-#if TCL_MAJOR_VERSION < 8
-		a = TclWordEnd(a,0,(int *)0)+1;
-#else
 		a = TclWordEnd(a,&a[strlen(a)],0,(int *)0)+1;
-#endif
 	}
 
 	rc = Tcl_Eval(interp,buf);
