@@ -33,7 +33,7 @@
  * ----------------------------------------------------------------------------
  */
 
-#include "expWinInt.h"
+#include "expWinSlave.hpp"
 
 
 ExpSlaveTrapDbg::ExpSlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message *> &_mQ)
