@@ -953,8 +953,6 @@ char *prog;
 				register int min;
 				int match_status;
 
-				if (*reginput == '\0') return EXP_CANMATCH;
-
 				/*
 				 * Lookahead to avoid useless match attempts
 				 * when we know what character comes next.
@@ -974,8 +972,7 @@ char *prog;
 						if (r == EXP_MATCH)
 							return(EXP_MATCH);
 						if (r == EXP_CANMATCH)
-/*							match_status = r;*/
-							return(EXP_CANMATCH);
+							match_status = r;
 					}
 					/* Couldn't or didn't -- back up. */
 					no--;
@@ -986,13 +983,7 @@ char *prog;
 			/* NOTREACHED */
 			break;
 		case END:
-			/* Success! */
-			if (*reginput == '\0') {
-				return(EXP_CANMATCH);
-			} else {
-				return(EXP_MATCH);
-			}
-/*			return(EXP_CANMATCH);	/* Success! */
+			return(EXP_MATCH);	/* Success! */
 			/* NOTREACHED */
 			break;
 		default:

@@ -2285,10 +2285,6 @@ char **argv;
 	if (aflag && !(openarg || filename)) {
 		usage_error
 	}
-	if (current_append && (openarg || filename)) {
-		exp_error(interp,"cannot start logging without first stopping logging");
-		return TCL_ERROR;
-	}
 
 	logfile = 0;
 	logfile_all = aflag;
