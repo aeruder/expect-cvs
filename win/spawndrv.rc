@@ -40,4 +40,4 @@ END
 
 // Include the Message Table that lists the error codes and textual replies.
 // This is output from the message compiler and found in the temp build directory.
-#include "spawndrv.rc"
+#include "spawndrvmc.rc"
