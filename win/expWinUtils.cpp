@@ -332,7 +332,7 @@ char *GetSysMsg (DWORD id)
 {
     int chars;
 
-    chars = wsprintf(sysMsgSpace, "[%d] ", id);
+    chars = wsprintf(sysMsgSpace, "[%u] ", id);
 
     FormatMessage(
 	    FORMAT_MESSAGE_FROM_SYSTEM |
