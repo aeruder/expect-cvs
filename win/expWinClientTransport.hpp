@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
- * expWinSpawnClient.hpp --
+ * expWinClientTransport.hpp --
  *
- *	Declares the SpawnClient classes.
+ *	Declares the ClientTransport classes.
  *
  * ----------------------------------------------------------------------------
  *
@@ -29,28 +29,21 @@
 #include "expWinMessage.hpp"
 #include "Mcl/include/CMcl.h"
 
-class SpawnClientTransport
+class ClientTransport
 {
 public:
     virtual void Write(Message *) = 0;
 };
 
 
-class ReadPipe : public CMclThreadHandler
-{
-public:
-    ReadPipe(CMclQueue<Message *> &_mQ);
-private:
-    virtual unsigned ThreadHandlerProc(void);
-    CMclQueue<Message *> &mQ;
-    HANDLE hStdIn;
-};
+// Forward reference.
+class ReadPipe;
 
-class SpawnStdioClient : public SpawnClientTransport
+class ClientStdio : public ClientTransport
 {
 public:
-    SpawnStdioClient(const char *name, CMclQueue<Message *> &_mQ);
-    ~SpawnStdioClient();
+    ClientStdio(const char *name, CMclQueue<Message *> &_mQ);
+    ~ClientStdio();
     virtual void Write(Message *);
 private:
     CMclQueue<Message *> &mQ;
