@@ -90,7 +90,7 @@ DllMain (HINSTANCE hInst, ULONG ulReason, LPVOID lpReserved)
 	console = CreateFile("CONOUT$", GENERIC_WRITE,
 		FILE_SHARE_READ|FILE_SHARE_WRITE, 0L, OPEN_EXISTING, 0, 0L);
 
-	inject = new Injector(console, &die);
+	inject = new Injector(console, &interrupt);
 	injectorThread = new CMclThread(inject);
 	break;
 
