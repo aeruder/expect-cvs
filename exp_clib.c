@@ -2723,7 +2723,6 @@ static struct f {
 
 	char *buffer;		/* buffer of matchable chars */
 	char *buffer_end;	/* one beyond end of matchable chars */
-	/*char *match;		/* start of matched string */
 	char *match_end;	/* one beyond end of matched string */
 	int msize;		/* size of allocate space */
 				/* actual size is one larger for null */
@@ -3112,9 +3111,6 @@ when trapping, see below in child half of fork */
 	close(sync_fds[1]);
 
 	/* wait for master to let us go on */
-	/* exp_debuglog("child: waiting for go ahead from parent\r\n"); */
-
-/*	close(master);	/* force master-side close so we can read */
 	cc = read(sync2_fds[0],&sync_byte,1);
 	if (cc == -1) {
 		restore_error_fd
