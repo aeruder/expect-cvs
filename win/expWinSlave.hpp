@@ -154,9 +154,12 @@ class ExpSlaveTrapPipe : public ExpSlaveTrap {
 public:
     ExpSlaveTrapPipe(int argc, char * const argv[]);
 };
+
 class ExpSlaveTrapDbg : public ExpSlaveTrap {
 public:
     ExpSlaveTrapDbg(int argc, char * const argv[]);
+private:
+    CMclThreadAutoPtr debuggerThread;
 };
 
 extern int ExpWinSlaveDoEvents(ExpSpawnClientTransport *transport, ExpSlaveTrap *trap);
