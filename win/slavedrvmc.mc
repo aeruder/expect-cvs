@@ -138,7 +138,7 @@ Severity=Fatal
 Facility=Io
 SymbolicName=MSG_IO_TRANSPRTARGSBAD
 Language=English
-%1 : %2 (%3,%4): Transport protocol bad: %5
+%1 : %2 (%3,%4): Transport protocol bad (must be 'conio' or 'stdio'): %5
 .
 
 MessageId=0x4
@@ -146,7 +146,7 @@ Severity=Fatal
 Facility=Io
 SymbolicName=MSG_IO_TRAPARGSBAD
 Language=English
-%1 : %2 (%3,%4): Trap method bad: %5
+%1 : %2 (%3,%4): Trap method bad (only 'dbg' is available): %5
 .
 
 

@@ -255,7 +255,8 @@ ConsoleDebugger::ThreadHandlerProc(void)
     si.dwXCountChars = 80;
     si.dwYCountChars = 25;
     si.wShowWindow = SW_SHOWNOACTIVATE;
-    si.dwFlags = STARTF_USESHOWWINDOW | STARTF_USECOUNTCHARS;
+    si.dwFlags = STARTF_FORCEONFEEDBACK | STARTF_USESHOWWINDOW |
+	STARTF_USECOUNTCHARS;
 
     cmdline = ArgMaker::BuildCommandLine(argc, argv);
 
@@ -418,6 +419,10 @@ again:
 
     case OUTPUT_DEBUG_STRING_EVENT:
 	OnXDebugString(proc, &debEvent);
+	break;
+
+    case RIP_EVENT:
+	OnXRip(proc, &debEvent);
 	break;
     }
 
@@ -1144,6 +1149,39 @@ ConsoleDebugger::OnXDebugString(Process *proc, LPDEBUG_EVENT pDebEvent)
 
     buffer[len] = '\0';  // Oops, Win9x forgets this.
     WriteMasterWarning(buffer, len);
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * ConsoleDebugger::OnXRip --
+ *
+ *	Catches and reports RIP events (system error messages).
+ *	Is RIP short for Rest-In-Peace??
+ *
+ * Results:
+ *	None
+ *
+ * Side Effects:
+ *	allocates memory that is freed by the Message destructor.
+ *
+ *----------------------------------------------------------------------
+ */
+void
+ConsoleDebugger::OnXRip(Process *proc, LPDEBUG_EVENT pDebEvent)
+{
+    char *errorMsg = new CHAR [512];
+    DWORD len;
+
+    if (pDebEvent->u.RipInfo.dwType == SLE_ERROR) {
+	len = wsprintf(errorMsg, "A fatal RIP error was caught: %s",
+		GetSysMsg(pDebEvent->u.RipInfo.dwError));
+	WriteMasterError(errorMsg, len);
+    } else {
+	len = wsprintf(errorMsg, "A non-fatal RIP error was caught: %s",
+		GetSysMsg(pDebEvent->u.RipInfo.dwError));
+	WriteMasterWarning(errorMsg, len);
+    }
 }
 
 /*
