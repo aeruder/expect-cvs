@@ -58,7 +58,7 @@ all : $(SYM)
 	$(MAKECMD) all
 
 release : $(SYM)
-	$(MAKECMD) release
+	$(MAKECMD) expect
 
 test : $(SYM)
 	$(MAKECMD) test
