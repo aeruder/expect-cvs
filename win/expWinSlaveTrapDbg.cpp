@@ -34,6 +34,7 @@
  */
 
 #include "expWinSlave.hpp"
+#include "expWinConsoleDebugger.hpp"
 
 
 SlaveTrapDbg::SlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message *> &_mQ)
