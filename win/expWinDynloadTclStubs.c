@@ -28,11 +28,12 @@
 
 #include "expWinInt.h"
 
+HMODULE hTclMod;
+
 void
 ExpDynloadTclStubs (void)
 {
     TCHAR TclDLLPath[MAX_PATH+1];
-    HMODULE hTclMod;
     typedef Tcl_Interp *(*LPFN_createInterpProc) ();
     LPFN_createInterpProc createInterpProc;
     Tcl_Interp *interp;
