@@ -40,7 +40,7 @@ VS_VERSION_INFO VERSIONINFO
     FILEFLAGS	    0x0L
 #endif
     FILEOS	    VOS__WINDOWS32    /* open to all */
-    FILETYPE	    VFT_DLL
+    FILETYPE	    VFT_APP
     FILESUBTYPE     VFT2_UNKNOWN
 BEGIN
     BLOCK "StringFileInfo"
