@@ -164,6 +164,7 @@ DoEvents(SpawnClientTransport *transport, SlaveTrap *slaveCtrl,
     while (mQ.Get(msg, INFINITE)) {
 	switch (msg->type) {
 	case Message::TYPE_NORMAL:
+	case Message::TYPE_WARNING:
 	case Message::TYPE_ERROR:
 	    //  Send stuff back to the parent.
 	    //

@@ -59,8 +59,8 @@ SpawnStdioClient::Write(Message *what)
 
     switch (what->type) {
     case Message::TYPE_NORMAL:
-    case Message::TYPE_WARNING:
 	where = hStdOut; break;
+    case Message::TYPE_WARNING:
     case Message::TYPE_ERROR:
 	where = hStdErr;
     }

@@ -147,7 +147,8 @@ private:
             instr_PUSH(0x68), instr_MOV_EAX(0xB8),
             instr_CALL_EAX(0xD0FF), instr_INT_3(0xCC)
 	{
-	    strcpy(data_DllName, "D:\\expect_wslive\\expect_win32_take2\\win\\Debug\\injector.dll");
+		// D:\\expect_wslive\\expect_win32_take2\\win\\Release\\ ....
+	    strcpy(data_DllName, "injector.dll");
 	}
     };
 #   else
