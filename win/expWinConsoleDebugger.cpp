@@ -29,6 +29,8 @@
 #include <stddef.h>
 #include <assert.h>
 #include "expWinSlave.hpp"
+#include "expWinInjectorIPC.hpp"
+
 #ifdef _MSC_VER
 #   pragma comment (lib, "imagehlp.lib")
 #endif
@@ -576,10 +578,11 @@ ConsoleDebugger::OnXThirdBreakpoint(Process *proc, LPDEBUG_EVENT pDebEvent)
     // Create the IPC connection to our loaded injector.dll
     //
     wsprintf(boxName, "ExpectInjector_pid%d", proc->pid);
-    injectorIPC = new CMclMailbox(80, sizeof(INPUT_RECORD), boxName);
+    injectorIPC = new CMclMailbox(IPC_NUMSLOTS, IPC_SLOTSIZE, boxName);
 
     // Check status.
-    if ((err = injectorIPC->Status()) != NO_ERROR) {
+    err = injectorIPC->Status();
+    if (err != NO_ERROR && err != ERROR_ALREADY_EXISTS) {
 	char *error = new char [512];
 	strcpy(error, "IPC connection to injector.dll could not be made: ");
 	strcat(error, GetSysMsg(err));
