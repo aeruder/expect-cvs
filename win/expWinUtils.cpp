@@ -54,10 +54,10 @@ ArgMaker::BuildCommandLine(
 {
     const char *arg, *start, *special;
     char *out;
-    int quote, i, need = 0;
+    int quote, i, need;
 
     // Guess how large we are.
-    for (i = 0; i < argc; i++) {
+    for (i = need = 0; i < argc; i++) {
 	need += strlen(argv[i]) + 10;
     }
 
