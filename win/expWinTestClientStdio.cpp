@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- * expWinClientTransportStdio.cpp --
+ * expWinTestClientStdio.cpp --
  *
  *	Simple standard I/O as our client.
  *
@@ -26,7 +26,7 @@
  * ----------------------------------------------------------------------------
  */
 
-#include "expWinClientTransport.hpp"
+#include "expWinTestClient.hpp"
 
 
 class ReadPipe : public CMclThreadHandler

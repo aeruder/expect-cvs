@@ -39,7 +39,7 @@ void ShutdownTcl (void);
 #include "slavedrvmc.h"
 #include "expWinUtils.hpp"
 #include "expWinMessage.hpp"
-#include "expWinClientTransport.hpp"
+#include "expWinTestClient.hpp"
 #include "expWinConsoleDebugger.hpp"
 #include "expWinSlaveTrap.hpp"
 

@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
- * expWinClientTransport.hpp --
+ * expWinTestClient.hpp --
  *
- *	Declares all the ClientTransport classes.
+ *	Declares all the TestClient classes.
  *
  * ----------------------------------------------------------------------------
  *
@@ -29,10 +29,10 @@
 #include "expWinMessage.hpp"
 #include "Mcl/include/CMcl.h"
 
-class ClientTransport
+class TestClient
 {
 public:
-    virtual ~ClientTransport() {};
+    virtual ~TestClient() {};
     virtual void Write(Message *) = 0;
 };
 
@@ -41,7 +41,7 @@ public:
 class ReadPipe;
 class ReadCon;
 
-class ClientStdio : public ClientTransport
+class ClientStdio : public TestClient
 {
 public:
     ClientStdio(const char *name, CMclQueue<Message *> &_mQ);
@@ -55,7 +55,7 @@ private:
     CMclThreadAutoPtr readThread;
 };
 
-class ClientConio : public ClientTransport
+class ClientConio : public TestClient
 {
 public:
     ClientConio(const char *name, CMclQueue<Message *> &_mQ);

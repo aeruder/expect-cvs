@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- * expWinClientTransportConio.cpp --
+ * expWinTestClientConio.cpp --
  *
  *	Simple console I/O as our client.
  *
@@ -26,7 +26,7 @@
  * ----------------------------------------------------------------------------
  */
 
-#include "expWinClientTransport.hpp"
+#include "expWinTestClient.hpp"
 
 class ReadCon : public CMclThreadHandler
 {
