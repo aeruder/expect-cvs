@@ -43,7 +43,6 @@
 #endif
 
 
-
 ExpSlaveTrapDbg::ExpSlaveTrapDbg(int argc, char * const argv[])
 {
     debuggerThread = new CMclThread(new ConsoleDebugger(argc, argv));

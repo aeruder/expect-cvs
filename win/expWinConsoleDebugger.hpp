@@ -223,11 +223,13 @@ private:
     // private vars
     //
     Process	*ProcessList;   // Top of linked list of Process instances.
-    HANDLE	HConsole;	// Master console handle (us).
+    HANDLE	MasterHConsole;	// Master console handle (us).
+    DWORD	MasterConsoleInputMode; // Current flags for the master console.
     COORD	ConsoleSize;    // Size of the console in the slave.
     COORD	CursorPosition; // Coordinates of the cursor in the slave.
     BOOL	CursorKnown;    // Do we know where the slave's cursor is?
     char	*SymbolPath;    // Storage for setting OS kernel symbols path.
+    BOOL	ShowExceptionBacktraces; // prints expection info from slave.
     int		_argc;		// Debugee process commandline count
     char * const * _argv;	// Debugee process commandline args
 };

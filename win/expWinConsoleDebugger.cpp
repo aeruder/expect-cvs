@@ -35,7 +35,8 @@
 
 //  Constructor.
 ConsoleDebugger::ConsoleDebugger (int argc, char * const *argv)
-    : _argc(argc), _argv(argv), ProcessList(0L), CursorKnown(FALSE)
+    : _argc(argc), _argv(argv), ProcessList(0L), CursorKnown(FALSE),
+    ShowExceptionBacktraces(FALSE)
 {
     //  Until further notice, assume this.
     //
@@ -722,7 +723,7 @@ ConsoleDebugger::OnXSecondChanceException(Process *proc,
     PIMAGEHLP_SYMBOL pSymbol = (PIMAGEHLP_SYMBOL)symbolBuffer;
     char *s;
 
-    if (!ExpDebug) {
+    if (!ShowExceptionBacktraces) {
 	return;
     }
 
@@ -751,7 +752,7 @@ ConsoleDebugger::OnXSecondChanceException(Process *proc,
     if (! SymInitialize(proc->hProcess, SymbolPath, FALSE)){
 	fprintf(stderr, "Unable to get backtrace (Debug 1): 0x%08x\n",
 	    GetLastError());
-	goto error;
+	return;
     }
 
 #ifdef _M_IX86
@@ -848,11 +849,6 @@ ConsoleDebugger::OnXSecondChanceException(Process *proc,
 	    fprintf(stderr, "%08x\n", frame.AddrPC.Offset);
 	    //EXP_LOG("%08x\t", frame.AddrPC.Offset);
 	}
-    }
-
-error:
-    if (ExpDebug) {
-	Sleep(10000);
     }
 #else
 #  error "Unsupported architecture"	    
