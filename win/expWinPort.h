@@ -79,7 +79,7 @@
 
 
 #undef TCL_STORAGE_CLASS
-#if defined(BUILD_spawndriver)
+#if defined(BUILD_slavedriver)
 #   define TCL_STORAGE_CLASS
 #elif defined(BUILD_exp)
 #   define TCL_STORAGE_CLASS DLLEXPORT
@@ -96,7 +96,7 @@ extern tclWinMakeFileProcType tclWinMakeFileProc;
 
 
 #include "expPlatDecls.h"
-#include "expIntPlatDecls.h"
+/*#include "expIntPlatDecls.h"*/
 
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLIMPORT
