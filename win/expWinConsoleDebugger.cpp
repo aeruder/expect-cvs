@@ -33,6 +33,8 @@
 #   pragma comment (lib, "imagehlp.lib")
 #endif
 
+typedef LPVOID (__stdcall *PFNVIRTALLEX)(HANDLE,LPVOID,SIZE_T,DWORD,DWORD);
+
 //  Constructor.
 ConsoleDebugger::ConsoleDebugger (int _argc, char * const *_argv, CMclQueue<Message *> &_mQ)
     : argc(_argc), argv(_argv), ProcessList(0L), CursorKnown(FALSE), ConsoleOutputCP(0),
@@ -1283,8 +1285,6 @@ void
 ConsoleDebugger::MakeSubprocessMemory(Process *proc, SIZE_T amount,
     LPVOID *pBuff, DWORD access)
 {
-    typedef LPVOID (__stdcall *PFNVIRTALLEX)(HANDLE,LPVOID,SIZE_T,DWORD,DWORD);
-
     if (dwPlatformId == VER_PLATFORM_WIN32_NT) {
         // We're on NT, so use VirtualAllocEx to allocate memory in the other
         // process' address space.  Alas, we can't just call VirtualAllocEx
@@ -1334,7 +1334,7 @@ ConsoleDebugger::RemoveSubprocessMemory(Process *proc, LPVOID buff)
         static PFNVIRTALLEX pfnVirtualAllocEx = (PFNVIRTALLEX)
             GetProcAddress(GetModuleHandle("KERNEL32.DLL"),"VirtualAllocEx");
 
-	pfnVirtualAllocEx(proc->hProcess, buff, 0, MEM_RELEASE);
+	pfnVirtualAllocEx(proc->hProcess, buff, 0, MEM_RELEASE, 0);
     } else {
 	HANDLE hFileMapping;
 	if (spMemMapping.Extract(buff, &hFileMapping) != TCL_OK) {
