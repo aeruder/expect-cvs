@@ -15,6 +15,7 @@
  *	work by Gordon Chaffee <chaffee@bmrc.berkeley.edu> for the WinNT port.
  *
  * Copyright (c) 2001-2002 Telindustrie, LLC
+ * Copyright (c) 2003 ActiveState Corporation
  *	work by David Gravereaux <davygrvy@pobox.com> for any Win32 OS.
  *
  * ----------------------------------------------------------------------------
@@ -44,7 +45,7 @@
 #   else
 #	ifdef _DEBUG
 #	    pragma comment (lib, "tcl" \
-		    STRINGIFY(JOIN(TCL_MAJOR_VERSION,TCL_MINOR_VERSION)) "d.lib")
+		    STRINGIFY(JOIN(TCL_MAJOR_VERSION,TCL_MINOR_VERSION)) "g.lib")
 #	else
 #	    pragma comment (lib, "tcl" \
 		    STRINGIFY(JOIN(TCL_MAJOR_VERSION,TCL_MINOR_VERSION)) ".lib")
