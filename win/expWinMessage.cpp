@@ -41,7 +41,7 @@ Message::~Message()
     case TYPE_ERROR:
     case TYPE_WARNING:
     case TYPE_INRECORD:
-	delete bytes;
+	delete [] bytes;
     }
 }
 
