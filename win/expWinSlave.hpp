@@ -134,21 +134,23 @@ public:
 class ExpSpawnMailboxClient : public ExpSpawnClientTransport
 {
 public:
-    ExpSpawnMailboxClient(const char *name);
+    ExpSpawnMailboxClient(const char *name, CMclQueue<Message> &_mQ);
     virtual void ExpWriteMaster();
     virtual void ExpReadMaster();
 private:
     CMclMailbox *MasterToExpect;
     CMclMailbox *MasterFromExpect;
+    CMclQueue<Message> &mQ;
 };
 
 class ExpSpawnSocketCli : public ExpSpawnClientTransport
 {
 public:
-    ExpSpawnSocketCli(const char *name);
+    ExpSpawnSocketCli(const char *name, CMclQueue<Message> &_mQ);
     virtual void ExpWriteMaster();
     virtual void ExpReadMaster();
 private:
+    CMclQueue<Message> &mQ;
     SOCKET sock;
 };
 
@@ -157,13 +159,14 @@ class ExpSlaveTrap {
 };
 class ExpSlaveTrapPipe : public ExpSlaveTrap {
 public:
-    ExpSlaveTrapPipe(int argc, char * const argv[], CMclQueue<Message> &mQ);
+    ExpSlaveTrapPipe(int argc, char * const argv[], CMclQueue<Message> &_mQ);
 };
 
 class ExpSlaveTrapDbg : public ExpSlaveTrap {
 public:
-    ExpSlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message> &mQ);
+    ExpSlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message> &_mQ);
 private:
+    CMclQueue<Message> &mQ;
     CMclThreadAutoPtr debuggerThread;
 };
 #endif /* __cplusplus */

@@ -43,8 +43,9 @@
 #endif
 
 
-ExpSlaveTrapDbg::ExpSlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message> &mQ)
+ExpSlaveTrapDbg::ExpSlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message> &_mQ)
+    : mQ(_mQ)
 {
-    debuggerThread = new CMclThread(new ConsoleDebugger(argc, argv, mQ));
+    debuggerThread = new CMclThread(new ConsoleDebugger(argc, argv, _mQ));
 }
 

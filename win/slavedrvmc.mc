@@ -133,6 +133,22 @@ Language=English
 %1 : %2 (%3,%4): Unexpected error: %5
 .
 
+MessageId=0x3
+Severity=Fatal
+Facility=Io
+SymbolicName=MSG_IO_TRANSPRTARGSBAD
+Language=English
+%1 : %2 (%3,%4): Transport protocol bad: %5
+.
+
+MessageId=0x4
+Severity=Fatal
+Facility=Io
+SymbolicName=MSG_IO_TRAPARGSBAD
+Language=English
+%1 : %2 (%3,%4): Trap method bad: %5
+.
+
 
 
 MessageId=0x0
