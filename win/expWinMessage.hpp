@@ -1,7 +1,8 @@
 /* ----------------------------------------------------------------------------
- * expWinSpawnPipeClient.cpp --
+ * expWinMessage.hpp --
  *
- *	Simple pipes as our IPC mechanism.
+ *	Declare the Message class.  This is what is passed over the thread-safe
+ *	event queue.
  *
  * ----------------------------------------------------------------------------
  *
@@ -26,28 +27,22 @@
  * ----------------------------------------------------------------------------
  */
 
-#include "expWinInt.h"
+#ifndef INC_expWinMessage_hpp__
+#define INC_expWinMessage_hpp__
 
-SpawnPipeClient::SpawnPipeClient(const char *name, CMclQueue<Message> &_mQ)
-    : mQ(_mQ)
+#include <stddef.h>	// for size_t
+
+class Message
 {
-    hStdIn  = GetStdHandle(STD_INPUT_HANDLE);
-    hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    hStdErr = GetStdHandle(STD_ERROR_HANDLE);
-}
+public:
+    Message();
+    Message(Message &);
 
-void
-SpawnPipeClient::Write(Message &what)
-{
-    DWORD dwWritten;
-    HANDLE where;
+    enum Mode {TYPE_BLANK, TYPE_NORMAL, TYPE_ERROR, TYPE_INSTREAM};
+    Mode type;
+    unsigned char *bytes;
+    size_t length;
+    //Message& operator=(const Message&);
+};
 
-    switch (what.type) {
-    case Message::TYPE_NORMAL:
-	where = hStdOut;
-    case Message::TYPE_ERROR:
-	where = hStdErr;
-    }
-
-    WriteFile(where, what.bytes, what.length, &dwWritten, 0L);
-}
+#endif

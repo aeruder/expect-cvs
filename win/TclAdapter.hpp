@@ -16,7 +16,7 @@
 #ifndef INC_TclAdapter_hpp__
 #define INC_TclAdapter_hpp__
 
-#include <tcl.h>
+#include "tcl.h"
 
 // We need at least the Tcl_Obj interface that was started in 8.0
 #if TCL_MAJOR_VERSION < 8

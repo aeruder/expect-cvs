@@ -32,7 +32,6 @@
 // Although we pull in the internal Expect headers, no references are made
 // to it from here.
 #include "expWinInt.h"
-#include "expWinUtils.hpp"
 #include <imagehlp.h>
 
 #ifdef _M_IX86

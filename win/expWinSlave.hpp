@@ -118,17 +118,12 @@ extern TCL_CPP void ExpProcessFreeByHandle(HANDLE hProcess);
 extern TCL_CPP void ExpSetConsoleSize(HANDLE hConsoleInW, HANDLE hConsoleOut, int w, int h, int useSocket, HANDLE hMaster, LPWSAOVERLAPPED over);
 extern TCL_CPP void ExpDynloadTclStubs (void);
 
+
 #ifdef __cplusplus
 #include "./Mcl/include/CMcl.h"
+#include "expWinUtils.hpp"
+#include "expWinMessage.hpp"
 
-class Message
-{
-public:
-    enum Type {TYPE_NORMAL, TYPE_ERROR, TYPE_INSTREAM};
-    Type mode;
-    BYTE *bytes;
-    DWORD length;
-};
 
 class SpawnClientTransport
 {
