@@ -252,7 +252,7 @@ MsvcDbg_GetCommandLine(void)
     RegOpenKeyEx(HKEY_LOCAL_MACHINE, "Software\\Tomasoft\\MsDevDbgCtrl",
 	    0, KEY_ALL_ACCESS, &root);
     RegQueryValueEx(root, pidChar, 0, &type, 0L, &size);
-    buf = (CHAR *) HeapAlloc(GetProcessHeap(), 0, size);
+    buf = new CHAR [size];
     RegQueryValueEx(root, pidChar, 0, &type, (LPBYTE) buf, &size);
     RegDeleteValue(root, pidChar);
     RegCloseKey(root);

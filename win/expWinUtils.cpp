@@ -328,7 +328,7 @@ ExpWinSyslog (DWORD errCode, ...)
     LocalFree(errMsg);
 }
 
-char *ExpSyslogGetSysMsg (DWORD id)
+char *GetSysMsg (DWORD id)
 {
     int chars;
 
