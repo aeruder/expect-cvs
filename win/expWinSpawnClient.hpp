@@ -46,10 +46,10 @@ private:
     CMclQueue<Message *> &mQ;
 };
 
-class SpawnPipeClient : public SpawnClientTransport
+class SpawnStdioClient : public SpawnClientTransport
 {
 public:
-    SpawnPipeClient(const char *name, CMclQueue<Message *> &_mQ);
+    SpawnStdioClient(const char *name, CMclQueue<Message *> &_mQ);
     virtual void Write(Message *);
 private:
     CMclQueue<Message *> &mQ;
