@@ -46,6 +46,9 @@ extern int     ExpDebug;
 //extern TCL_CPP void ExpProcessFreeByHandle(HANDLE hProcess);
 //extern TCL_CPP void ExpSetConsoleSize(HANDLE hConsoleInW, HANDLE hConsoleOut, int w, int h, int useSocket, HANDLE hMaster, LPWSAOVERLAPPED over);
 
+void DynloadTclStubs (void);
+void ShutdownTcl (void);
+
 
 #include "Mcl/include/CMcl.h"
 #include "slavedrvmc.h"
