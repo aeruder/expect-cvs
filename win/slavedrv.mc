@@ -15,8 +15,7 @@
 ; *	work by Gordon Chaffee <chaffee@bmrc.berkeley.edu> for the WinNT port.
 ; *
 ; * Copyright (c) 2001-2002 Telindustrie, LLC
-; *	work by David Gravereaux <davygrvy@pobox.com> for full Stubs complience
-; *	and any Win32 OS.
+; *	work by David Gravereaux <davygrvy@pobox.com> for any Win32 OS.
 ; *
 ; * ----------------------------------------------------------------------------
 ; * URLs:    http://expect.nist.gov/
