@@ -57,7 +57,7 @@ private:
 	// Create the shared memory IPC transfer mechanism by name
 	// (a mailbox).
 	ConsoleDebuggerIPC = 
-		new CMclMailbox(10, sizeof(INPUT_RECORD), boxName);
+		new CMclMailbox(80, sizeof(INPUT_RECORD), boxName);
 
 	// Check status.
 	switch (err = ConsoleDebuggerIPC->Status()) {
