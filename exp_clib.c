@@ -3007,13 +3007,20 @@ when trapping, see below in child half of fork */
 	/* according to Stevens - Adv. Prog..., p 642 */
 #ifdef __QNX__ /* posix in general */
 	if (tcsetct(0, getpid()) == -1) {
-#else
-	if (ioctl(0,TIOCSCTTY,(char *)0) < 0) {
-#endif
-		restore_error_fd
-		fprintf(stderr,"failed to get controlling terminal using TIOCSCTTY");
-		exit(-1);
+	  restore_error_fd
+	  expErrorLog("failed to get controlling terminal using TIOCSCTTY");
+	  exit(-1);
 	}
+#else
+	(void) ioctl(0,TIOCSCTTY,(char *)0);
+	/* ignore return value - on some systems, it is defined but it
+	 * fails and it doesn't seem to cause any problems.  Or maybe
+	 * it works but returns a bogus code.  Noone seems to be able
+	 * to explain this to me.  The systems are an assortment of
+	 * different linux systems (and FreeBSD 2.5), RedHat 5.2 and
+	 * Debian 2.0
+	 */
+#endif
 #endif
 
 #ifdef CRAY
