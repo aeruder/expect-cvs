@@ -21,7 +21,7 @@ _MKPREPVC32_MIF = 1
 !endif
 
 
-MAKECMD	    = nmake.exe -nologo /$(MAKEFLAGS) -f win\makefile.vc32
+MAKECMD	    = cd win & nmake.exe -nologo /$(MAKEFLAGS) -f makefile.vc32
 SYM	    =
 
 
