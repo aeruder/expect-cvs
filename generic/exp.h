@@ -91,8 +91,6 @@
 #endif
 
 
-/* BEGIN -- Tcl header file bugs */
-
 /* Fix the Borland bug in tcl.h */
 #ifndef TCL_EXTERN
 #   undef DLLIMPORT
