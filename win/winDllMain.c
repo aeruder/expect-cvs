@@ -54,7 +54,7 @@
 
 
 /* public global */
-HMODULE expDllInstance;
+HMODULE expDllInstance = NULL;
 
 #ifndef STATIC_BUILD
 BOOL WINAPI

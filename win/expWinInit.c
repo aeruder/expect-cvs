@@ -88,7 +88,12 @@ ExpWinInit(void)
 	expWinProcs = &unicodeProcs;
     }
 
-    /* need TclWinMakeFile() from the outside... bastards! */
+    /* need TclWinMakeFile() from the outside... los bastards! */
     tclWinMakeFileProc = (tclWinMakeFileProcType)
 	    GetProcAddress(TclWinGetTclInstance(), "TclWinMakeFile");
+
+#ifdef STATIC_BUILD
+    /* this may not be correct, but closer than not */
+    expDllInstance = TclWinGetTclInstance();
+#endif
 }
