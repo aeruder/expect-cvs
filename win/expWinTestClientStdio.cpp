@@ -70,7 +70,7 @@ private:
     HANDLE hStdIn;
 };
 
-ClientStdio::ClientStdio(const char *name, CMclQueue<Message *> &_mQ)
+ClientStdio::ClientStdio(CMclQueue<Message *> &_mQ)
     : mQ(_mQ)
 {
     hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);

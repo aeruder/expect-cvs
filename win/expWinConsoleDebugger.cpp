@@ -51,7 +51,8 @@ ConsoleDebugger::ConsoleDebugger
 (int _argc, char * const *_argv, CMclQueue<Message *> &_mQ)
     : argc(_argc), argv(_argv), ProcessList(0L), CursorKnown(FALSE),
     ConsoleOutputCP(0), ConsoleCP(0), mQ(_mQ), pStartAddress(0L),
-    originalExeEntryPointOpcode(0), pInjectorStub(0), injectorIPC(0L)
+    originalExeEntryPointOpcode(0), pInjectorStub(0), injectorIPC(0L),
+    interacting(false), interactingConsole(0L)
 {
     OSVERSIONINFO osvi;
     DWORD n, i;
@@ -345,7 +346,7 @@ again:
 	goto skip;
     }
 
-    bpCritSec.Enter();
+//    bpCritSec.Enter();
 
     // Process the debugging event code.
     //
@@ -430,7 +431,7 @@ again:
 	break;
     }
 
-    bpCritSec.Leave();
+//    bpCritSec.Leave();
 
 skip:
     // Resume executing the thread that reported the debugging event.
@@ -1879,4 +1880,22 @@ ConsoleDebugger::WriteRecord (INPUT_RECORD *ir)
     }
 }
 
+void
+ConsoleDebugger::EnterInteract (HANDLE OutConsole)
+{
+    interactingConsole = OutConsole;
 
+    // More stuff to do here... What?
+    // Copy entire screen contents, how?
+    // Set interactingConsole to the proper size?
+    // more ???  help!
+
+    interacting = true;
+}
+
+void
+ConsoleDebugger::ExitInteract ()
+{
+    interactingConsole = 0L;
+    interacting = false;
+}

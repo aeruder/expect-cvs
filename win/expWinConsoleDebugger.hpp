@@ -42,7 +42,10 @@ class ConsoleDebugger : public CMclThreadHandler, ArgMaker
 public:
     ConsoleDebugger(int _argc, char * const *_argv, CMclQueue<Message *> &_mQ);
     ~ConsoleDebugger();
+
     void WriteRecord (INPUT_RECORD *ir);
+    void EnterInteract (HANDLE OutConsole);
+    void ExitInteract (void);
 
 private:
     virtual unsigned ThreadHandlerProc(void);
@@ -256,7 +259,7 @@ private:
 
     // This critical section is set when breakpoints are running.
     //
-    CMclCritSec bpCritSec;
+//    CMclCritSec bpCritSec;
 
     LPVOID	pStartAddress;	// Start address of the top process.
     BYTE	originalExeEntryPointOpcode;
@@ -281,6 +284,9 @@ private:
     PFNVIRTUALFREEEX pfnVirtualFreeEx;
 
     CMclMailbox *injectorIPC;	// IPC transfer mechanism to the injector dll.
+
+    bool interacting;
+    HANDLE interactingConsole;
 };
 
 #endif // INC_expWinConsoleDebugger_hpp__

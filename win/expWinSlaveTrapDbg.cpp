@@ -56,8 +56,18 @@ SlaveTrapDbg::~SlaveTrapDbg()
 
 void SlaveTrapDbg::Write(Message *msg)
 {
-    if (msg->type == Message::TYPE_INRECORD) {
+    switch (msg->type) {
+    case Message::TYPE_ENTERINTERACT:
+	debugger->EnterInteract(static_cast<HANDLE>(msg->bytes));
+	break;
+
+    case Message::TYPE_EXITINTERACT:
+	debugger->ExitInteract();
+	break;
+
+    case Message::TYPE_INRECORD:
 	debugger->WriteRecord(static_cast<INPUT_RECORD *>(msg->bytes));
-	delete msg;
+	break;
     }
+    delete msg;
 }

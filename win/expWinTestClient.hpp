@@ -44,8 +44,8 @@ class ReadCon;
 class ClientStdio : public TestClient
 {
 public:
-    ClientStdio(const char *name, CMclQueue<Message *> &_mQ);
-    ~ClientStdio();
+    ClientStdio(CMclQueue<Message *> &_mQ);
+    virtual ~ClientStdio();
     virtual void Write(Message *);
 private:
     CMclQueue<Message *> &mQ;
@@ -58,8 +58,8 @@ private:
 class ClientConio : public TestClient
 {
 public:
-    ClientConio(const char *name, CMclQueue<Message *> &_mQ);
-    ~ClientConio();
+    ClientConio(CMclQueue<Message *> &_mQ);
+    virtual ~ClientConio();
     virtual void Write(Message *);
 private:
     CMclQueue<Message *> &mQ;
@@ -67,4 +67,15 @@ private:
     ReadCon *reader;
     CMclEvent Stop;
     CMclThread *readThread;
+};
+
+class ClientInteract : public TestClient
+{
+public:
+    ClientInteract(CMclQueue<Message *> &_mQ);
+    virtual ~ClientInteract();
+    virtual void Write(Message *);
+private:
+    CMclQueue<Message *> &mQ;
+    HANDLE ConOut, ConIn, ConInteract, oldBuffer;
 };

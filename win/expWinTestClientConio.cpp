@@ -119,7 +119,7 @@ private:
 };
 
 
-ClientConio::ClientConio(const char *name, CMclQueue<Message *> &_mQ)
+ClientConio::ClientConio(CMclQueue<Message *> &_mQ)
     : mQ(_mQ), Stop()
 {
     COORD Size = {80, 500};
