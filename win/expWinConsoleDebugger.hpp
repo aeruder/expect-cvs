@@ -162,6 +162,7 @@ private:
     void OnXDeleteThread	(Process *, LPDEBUG_EVENT);
     void OnXLoadDll		(Process *, LPDEBUG_EVENT);
     void OnXUnloadDll		(Process *, LPDEBUG_EVENT);
+    void OnXDebugString		(Process *, LPDEBUG_EVENT);
     void OnXSecondChanceException (Process *, LPDEBUG_EVENT);
     void OnXSingleStep		(Process *, LPDEBUG_EVENT);
 
@@ -208,6 +209,8 @@ private:
 
     // send info back to the parent
     void WriteMaster		(CHAR *, DWORD);
+    void WriteMasterWarning	(CHAR *, DWORD);
+
 
     // announce we are done.
     void NotifyDone		();

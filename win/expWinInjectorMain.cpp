@@ -87,7 +87,7 @@ private:
 	return 0;
     }
 
-    char *GetSysMsg(DWORD id)
+    const char *GetSysMsg(DWORD id)
     {
 	int chars;
 
@@ -107,9 +107,6 @@ CMclEvent *interrupt;
 CMclThread *injectorThread;
 Injector *inject;
 HANDLE console;
-
-// It is documented that it "isn't a good idea to spawn threads from a DllMain".
-// Pooie on you; this is what we will do.
 
 BOOL WINAPI
 DllMain (HINSTANCE hInst, ULONG ulReason, LPVOID lpReserved)

@@ -387,7 +387,7 @@ again:
 	break;
 
     case OUTPUT_DEBUG_STRING_EVENT:
-	// Display the output debugging string.
+	OnXDebugString(proc, &debEvent);
 	break;
     }
 
@@ -666,7 +666,7 @@ ConsoleDebugger::OnXCreateProcess(Process *proc, LPDEBUG_EVENT pDebEvent)
 /*
  *----------------------------------------------------------------------
  *
- * OnXLoadDll --
+ * ConsoleDebugger::OnXLoadDll --
  *
  *	This routine is called when a LOAD_DLL_DEBUG_EVENT is seen
  *
@@ -806,7 +806,7 @@ ConsoleDebugger::OnXLoadDll(Process *proc, LPDEBUG_EVENT pDebEvent)
 /*
  *----------------------------------------------------------------------
  *
- * OnXUnloadDll --
+ * ConsoleDebugger::OnXUnloadDll --
  *
  *	This routine is called when a UNLOAD_DLL_DEBUG_EVENT is seen
  *
@@ -838,6 +838,47 @@ ConsoleDebugger::OnXUnloadDll(Process *proc, LPDEBUG_EVENT pDebEvent)
 	}
 	delete modPtr;
     }
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * ConsoleDebugger::OnXDebugString --
+ *
+ *	This routine is called when a OUTPUT_DEBUG_STRING_EVENT is seen.
+ *
+ * Results:
+ *	None
+ *
+ * Side Effects:
+ *	Allocates a buffer for the string that is not cleared *here*.
+ *
+ *----------------------------------------------------------------------
+ */
+void
+ConsoleDebugger::OnXDebugString(Process *proc, LPDEBUG_EVENT pDebEvent)
+{
+    CHAR *buffer;
+    DWORD len;
+
+    if (pDebEvent->u.DebugString.fUnicode) {
+	int wlen = pDebEvent->u.DebugString.nDebugStringLength;
+	WCHAR *wbuffer = new WCHAR [wlen];
+	ReadSubprocessStringW(proc,
+		pDebEvent->u.DebugString.lpDebugStringData,
+		wbuffer, wlen);
+	len = WideCharToMultiByte(CP_ACP, 0, wbuffer, wlen, 0L, 0, 0L, 0L);
+	buffer = new CHAR [len];
+	WideCharToMultiByte(CP_ACP, 0, wbuffer, wlen, buffer, len, 0L, 0L);
+    } else {
+	len = pDebEvent->u.DebugString.nDebugStringLength;
+	buffer = new CHAR [len];
+	ReadSubprocessStringA(proc,
+		pDebEvent->u.DebugString.lpDebugStringData,
+		buffer, len);
+    }
+
+    WriteMasterWarning(buffer, len);
 }
 
 /*
@@ -1274,6 +1315,18 @@ ConsoleDebugger::WriteMaster(CHAR *buf, DWORD len)
     msg->bytes = (BYTE *) _strdup(buf);
     msg->length = len;
     msg->type = Message::TYPE_NORMAL;
+    mQ.Put(msg);
+}
+
+/* doesn't copy */
+void
+ConsoleDebugger::WriteMasterWarning(CHAR *buf, DWORD len)
+{
+    Message *msg;
+    msg = new Message;
+    msg->bytes = (BYTE *) buf;
+    msg->length = len;
+    msg->type = Message::TYPE_WARNING;
     mQ.Put(msg);
 }
 

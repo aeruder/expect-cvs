@@ -62,6 +62,7 @@ SpawnStdioClient::Write(Message *what)
     case Message::TYPE_NORMAL:
 	where = hStdOut;
     case Message::TYPE_ERROR:
+    case Message::TYPE_WARNING:
 	where = hStdErr;
     }
     WriteFile(where, what->bytes, what->length, &dwWritten, 0L);
