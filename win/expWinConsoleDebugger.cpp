@@ -238,6 +238,7 @@ ConsoleDebugger::~ConsoleDebugger()
 {
     delete [] SymbolPath;
     if (injectorIPC) delete injectorIPC;
+    CloseHandle(hMasterConsole);
 }
 
 unsigned
@@ -254,9 +255,6 @@ ConsoleDebugger::ThreadHandlerProc(void)
     si.wShowWindow = SW_SHOWDEFAULT;
 
     cmdline = ArgMaker::BuildCommandLine(argc, argv);
-
-    // Make sure the master does not ignore Ctrl-C
-    //SetConsoleCtrlHandler(0L, FALSE);
 
     ok = CreateProcess(
 	    0L,		// Module name (not needed).
@@ -279,9 +277,6 @@ ConsoleDebugger::ThreadHandlerProc(void)
     WaitForInputIdle(pi.hProcess, 5000);
     CloseHandle(pi.hThread);
     CloseHandle(pi.hProcess);
-
-    // Make sure we now ignore Ctrl-C
-    //SetConsoleCtrlHandler(0L, TRUE);
 
     exitcode = CommonDebugger();
     NotifyDone();
