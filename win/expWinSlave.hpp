@@ -41,7 +41,7 @@ void ShutdownTcl (void);
 #include "expWinMessage.hpp"
 #include "expWinTestClient.hpp"
 #include "expWinConsoleDebugger.hpp"
-#include "expWinConsoleDetour.hpp"
+//#include "expWinConsoleDetour.hpp"
 #include "expWinSlaveTrap.hpp"
 
 void MapToKeys (Message *msg, CMclQueue<Message *> &mQ);

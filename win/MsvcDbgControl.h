@@ -36,6 +36,6 @@
 
 #include <windows.h>
 
-extern TCL_CPP int	MsvcDbg_Launch(const CHAR *wrkspace, Tcl_DString *cmdline,
+TCL_EXTRNC int	MsvcDbg_Launch(const CHAR *wrkspace, Tcl_DString *cmdline,
 			void **token);
 #endif

@@ -231,7 +231,7 @@ Exp_SttyCmd(clientData, interp, argc, argv)
     ClientData clientData;
     Tcl_Interp *interp;
     int argc;
-    char **argv;
+    CONST char **argv;
 {
 #if 1
     /* redirection symbol is not counted as a stty arg in terms */
@@ -244,7 +244,7 @@ Exp_SttyCmd(clientData, interp, argc, argv)
     int cooked = FALSE;
     int was_raw, was_echo;
 
-    char **argv0 = argv;
+    CONST char **argv0 = argv;
 
     for (argv=argv0+1;*argv;argv++) {
 	if (argv[0][0] == '<') {
@@ -322,7 +322,7 @@ Exp_SystemCmd(clientData, interp, argc, argv)
     ClientData clientData;
     Tcl_Interp *interp;
     int argc;
-    char **argv;
+    CONST char **argv;
 {
     Tcl_AppendResult(interp, argv[0], ": not implemented", NULL);
     return TCL_ERROR;

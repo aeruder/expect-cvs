@@ -27,7 +27,7 @@
  */
 
 #include "expWinMessage.hpp"
-#include "Mcl/include/CMcl.h"
+#include "CMcl.h"
 
 class TestClient
 {

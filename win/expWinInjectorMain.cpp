@@ -103,7 +103,6 @@ HANDLE console;
 BOOL WINAPI
 DllMain (HINSTANCE hInst, ULONG ulReason, LPVOID lpReserved)
 {
-
     switch (ulReason) {
     case DLL_PROCESS_ATTACH:
 	DisableThreadLibraryCalls(hInst);
@@ -118,8 +117,8 @@ DllMain (HINSTANCE hInst, ULONG ulReason, LPVOID lpReserved)
 	injectorThread->Wait(INFINITE);
 	CloseHandle(console);
 	delete interrupt;
-	delete inject;
 	delete injectorThread;
+	delete inject;
 	break;
     }
     return TRUE;

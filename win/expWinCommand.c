@@ -177,7 +177,7 @@ exp_getpidproc()
 /*ARGSUSED*/
 
 int
-Exp_SpawnCmd(ClientData clientData,Tcl_Interp *interp,int argc,char **argv)
+Exp_SpawnCmd(ClientData clientData,Tcl_Interp *interp,int argc, CONST char **argv)
 {
     HANDLE hSlaveDrv = INVALID_HANDLE_VALUE;	/* Handle to communicate with slave driver */
     Tcl_Pid slaveDrvPid;	/* Process id of the slave */
@@ -185,8 +185,8 @@ Exp_SpawnCmd(ClientData clientData,Tcl_Interp *interp,int argc,char **argv)
     DWORD dwRet;
     DWORD count;
     int echo = TRUE;
-    char **a;
-    char *argv0 = argv[0];
+    CONST char **a;
+    CONST char *argv0 = argv[0];
     char slaveName[50];		/* Used to set 'spawn_out(slave,name)' */
     static int slaveId = 1;	/* Start at one because console0 is expect's */
     UCHAR buf[8];		/* enough space for child status info */
@@ -202,12 +202,12 @@ Exp_SpawnCmd(ClientData clientData,Tcl_Interp *interp,int argc,char **argv)
     Tcl_Channel spawnChan = NULL;
     TclFile masterRFile;
     TclFile masterWFile;
-    char *openarg = NULL;
+    CONST char *openarg = NULL;
     int leaveopen = 0;
     CONST char *val;
     int hide;
     int debug;
-    char **nargv = NULL;
+    CONST char **nargv = NULL;
     int i, j;
     int usePipes = 0;
     int useSocket = 0;
@@ -641,11 +641,11 @@ end:
 /*ARGSUSED*/
 
 int
-Exp_KillCmd(ClientData clientData,Tcl_Interp *interp,int argc,char **argv)
+Exp_KillCmd(ClientData clientData,Tcl_Interp *interp,int argc, CONST char **argv)
 {
     struct exp_f *f;
-    char *chanId = NULL;
-    char *argv0 = argv[0];
+    CONST char *chanId = NULL;
+    CONST char *argv0 = argv[0];
     int signal = 9;
     char buf[2];
     int msg;

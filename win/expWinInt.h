@@ -48,14 +48,11 @@
 
 #undef TCL_STORAGE_CLASS
 #if defined(BUILD_slavedriver)
-#   define TCL_STORAGE_CLASS
-#   include "expWinSlave.hpp"
-#   ifdef _DEBUG
-#	include "MsvcDbgControl.h"
-#   endif
-#   include "slavedrvmc.h"
+//#   define TCL_STORAGE_CLASS
+//#   include "expWinSlave.hpp"
 #elif defined(BUILD_exp)
 #   define TCL_STORAGE_CLASS DLLEXPORT
+#   include "slavedrvmc.h"  /* error code constants */
 #else
 #   ifdef USE_EXP_STUBS
 #	define TCL_STORAGE_CLASS
@@ -131,7 +128,7 @@ typedef struct {
 	    DWORD);
 } ExpWinProcs;
 
-extern TCL_CPP ExpWinProcs *expWinProcs;
+TCL_EXTRNC ExpWinProcs *expWinProcs;
 
 
 #include "expIntPlatDecls.h"

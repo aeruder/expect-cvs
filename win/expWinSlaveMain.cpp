@@ -141,9 +141,9 @@ SlaveOpenTrap(const char *method, int argc, char * const argv[],
     if (!strcmp(method, "dbg")) {
 	return new SlaveTrapDbg(argc, argv, mQ);
     }
-    else if (!strcmp(method, "detour")) {
-	return new SlaveTrapDetour(argc, argv, mQ);
-    }
+//    else if (!strcmp(method, "detour")) {
+//	return new SlaveTrapDetour(argc, argv, mQ);
+//    }
     else EXP_LOG1(MSG_IO_TRAPARGSBAD, method);
 
     // not reached.
