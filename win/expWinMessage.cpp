@@ -34,6 +34,7 @@ Message::Message()
 {
 }
 /*
+I'm not defining this as a check to see if the Queue is using it :)
 Message::Message(Message &other)
 {
     type = other.type;

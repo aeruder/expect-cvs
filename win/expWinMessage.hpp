@@ -36,7 +36,7 @@ class Message
 {
 public:
     Message();
-    //Message(Message &);
+    Message(Message &);
 
     enum Mode {TYPE_BLANK, TYPE_NORMAL, TYPE_ERROR, TYPE_INSTREAM, TYPE_FUNCTION};
     Mode type;

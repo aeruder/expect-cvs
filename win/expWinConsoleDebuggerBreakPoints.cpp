@@ -102,7 +102,7 @@ void
 ConsoleDebugger::OnBeep(Process *proc, ThreadInfo *threadInfo,
     Breakpoint *brkpt, PDWORD returnValue, DWORD direction)
 {
-    CHAR buf[2];
+    CHAR buf[2] = {0,0};
 
     if (direction == BREAK_IN) {
 	// Modify the arguments so a beep doesn't sound in the slave.
@@ -253,9 +253,9 @@ ConsoleDebugger::OnFillConsoleOutputCharacter(Process *proc,
 	    bufpos += postCols;
 	}
     }
-    if (GetConsoleScreenBufferInfo(MasterHConsole, &info) == FALSE) {
+    if (GetConsoleScreenBufferInfo(hMasterConsole, &info) == FALSE) {
 	char errbuf[200];
-	wsprintfA(errbuf, "handle=0x%08x", MasterHConsole);
+	wsprintfA(errbuf, "handle=0x%08x", hMasterConsole);
 	EXP_LOG2(MSG_DT_SCREENBUF, errbuf, ExpSyslogGetSysMsg(GetLastError()));
     } else {
 	CursorPosition = info.dwCursorPosition;

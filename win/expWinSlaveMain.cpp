@@ -47,7 +47,7 @@ main (void)
 {
     int argc;			    // Number of command-line arguments.
     char **argv;		    // Values of command-line arguments.
-    SpawnClientTransport *tclient;  // class pointer of transport client.
+    SpawnClientTransport *transport;// class pointer of transport client.
     SlaveTrap *slaveCtrl;	    // trap method class pointer.
     CMclQueue<Message *> messageQ;  // Our message Queue we hand off to everyone.
     CMclEvent Shutdown;		    // global shutdown for the event queue.
@@ -64,7 +64,7 @@ main (void)
     cmdLine = OurGetCmdLine();
 
     //  Use our custom commandline parser to overcome bugs in the default
-    //  crt library as well as allowing us to hook into a GetCommandLine().
+    //  crt library as well as allowing us to hook at GetCommandLine().
     //
     SetArgv(cmdLine, &argc, &argv);
 
@@ -75,7 +75,7 @@ main (void)
     //  Open the client side of our IPC transport that connects us back
     //  to the parent (ie. the Expect extension).
     //
-    tclient = SpawnOpenClientTransport(argv[1], messageQ);
+    transport = SpawnOpenClientTransport(argv[1], messageQ);
 
     //  Start the process to be intercepted within the trap method requested
     //  on the commandline (ie. run telnet in a debugger and trap OS calls).
@@ -84,7 +84,7 @@ main (void)
 
     //  Process messages.
     //
-    code = DoEvents(tclient, slaveCtrl, messageQ, Shutdown);
+    code = DoEvents(transport, slaveCtrl, messageQ, Shutdown);
 
     //  Close up.
     //
@@ -156,8 +156,8 @@ SlaveOpenTrap(const char *method, int argc, char * const argv[],
  */
 
 int
-DoEvents(SpawnClientTransport *transport,
-    SlaveTrap *slaveCtrl, CMclQueue<Message *> &mQ, CMclEvent &sd)
+DoEvents(SpawnClientTransport *transport, SlaveTrap *slaveCtrl,
+    CMclQueue<Message *> &mQ, CMclEvent &sd)
 {
     Message *msg;
 
@@ -182,6 +182,7 @@ DoEvents(SpawnClientTransport *transport,
 	    break;
 	}
     }
+    delete transport, slaveCtrl;
     return 0;
 }
 
@@ -189,7 +190,7 @@ DoEvents(SpawnClientTransport *transport,
  *----------------------------------------------------------------------
  *  OurGetCmdLine --
  *
- *	Handles the logic for how to retreive the commandline.
+ *	Handles the logic for how to retrieve the commandline.
  *
  *  Returns:
  *	the commandline in a single string.

@@ -46,14 +46,26 @@ private:
     CMclQueue<Message *> &mQ;
 };
 
+class ReadPipe : public CMclThreadHandler
+{
+public:
+    ReadPipe(CMclQueue<Message *> &_mQ);
+private:
+    virtual unsigned ThreadHandlerProc(void);
+    CMclQueue<Message *> &mQ;
+    HANDLE hStdIn;
+};
+
 class SpawnStdioClient : public SpawnClientTransport
 {
 public:
     SpawnStdioClient(const char *name, CMclQueue<Message *> &_mQ);
+    ~SpawnStdioClient();
     virtual void Write(Message *);
 private:
     CMclQueue<Message *> &mQ;
     HANDLE hStdOut;
     HANDLE hStdErr;
-    HANDLE hStdIn;
+    ReadPipe *reader;
+    CMclThreadAutoPtr readThread;
 };
