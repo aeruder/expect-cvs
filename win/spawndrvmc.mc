@@ -1,11 +1,15 @@
 ;========================================================================
-;  spawndrv.mc --
+;  spawndrvmc.mc --
 ;
-;	This file contains the message catalog for use with error
-;	reporting.
+;	This file contains the message catalog for use with Win32 error
+;	reporting through ReportEvent() and FormatMessage().
 ;
-;========================================================================
-; RCS: @(#) $Id$
+; Copyright (c) 2001 Telindustrie, LLC
+;
+; Authors: David Gravereaux <davygrvy@pobox.com>
+;
+; See the file "license.terms" for information on usage and redistribution
+; of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 ;========================================================================
 
 MessageIdTypedef=DWORD
