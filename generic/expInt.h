@@ -14,7 +14,7 @@
  * Copyright (c) 1997 Mitel Corporation
  *	work by Gordon Chaffee <chaffee@bmrc.berkeley.edu> for the WinNT port.
  *
- * Copyright (c) 2002 Telindustrie, LLC
+ * Copyright (c) 2001-2002 Telindustrie, LLC
  *	work by David Gravereaux <davygrvy@pobox.com> for any Win32 OS.
  *
  * ----------------------------------------------------------------------------
@@ -288,7 +288,6 @@ TCL_EXTERN(int)		    expect_key;
 //TCL_EXTERN(void)		exp_close_all _ANSI_ARGS_((Tcl_Interp *));
 //TCL_EXTERN(void)		exp_trap_on _ANSI_ARGS_((int));
 //TCL_EXTERN(int)		exp_trap_off _ANSI_ARGS_((char *));
-//TCL_EXTERN(void)		exp_strftime();
 /*EXTERN(void)		exp_init_expect _ANSI_ARGS_((Tcl_Interp *));*/
 //TCL_EXTERN(int)		exp_tcl2_returnvalue _ANSI_ARGS_((int));
 //TCL_EXTERN(int)		exp_2tcl_returnvalue _ANSI_ARGS_((int));
