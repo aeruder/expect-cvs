@@ -2693,8 +2693,8 @@ int exp_loguser = TRUE;		/* if TRUE, user sees interactions on stdout */
 
 
 char *exp_printify();
-int getptymaster();
-int getptyslave();
+int exp_getptymaster();
+int exp_getptyslave();
 int Exp_StringMatch();
 
 #define sysreturn(x)	return(errno = x, -1)
