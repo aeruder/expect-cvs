@@ -30,10 +30,8 @@
 #define INC_expWinConsoleDebugger_hpp__
 
 #include "expWinSlave.hpp"
+#include "TclHash.hpp"	    // for the hash table template.
 #include <imagehlp.h>
-
-#include <string>   // for the string class.
-#include <map>	    // for associative arrays.
 
 
 #ifdef _M_IX86
@@ -138,8 +136,8 @@ private:
 	PIMAGE_DEBUG_INFORMATION dbgInfo;
     };
 
-    typedef std::map<std::string, PVOID> STRING2PTR;
-    typedef std::map<PVOID, Module *> PTR2MODULE;
+    typedef Tcl::Hash<PVOID,TCL_STRING_KEYS> STRING2PTR;
+    typedef Tcl::Hash<Module *,TCL_ONE_WORD_KEYS> PTR2MODULE;
 
     //  There is one of these instances for each subprocess that we are
     //  controlling.
