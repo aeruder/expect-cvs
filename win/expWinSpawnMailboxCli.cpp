@@ -31,6 +31,7 @@
  * RCS: @(#) $Id$
  * ----------------------------------------------------------------------------
  */
+
 #include "expWinInt.h"
 
 
@@ -41,7 +42,7 @@ ExpSpawnMailboxCli::ExpSpawnMailboxCli(const char *name)
     DWORD err;
 
     /* Connect to the out-going. */
-    wsprintf(boxName, _T("%sTo"), name);
+    wsprintf(boxName, "%sTo", name);
     MasterToExpect = new CMclMailbox(boxName);
 
     /* Check status. */
@@ -56,7 +57,7 @@ ExpSpawnMailboxCli::ExpSpawnMailboxCli(const char *name)
     }
 
     /* Connect to the in-coming. */
-    wsprintf(boxName, _T("%sFrom"), name);
+    wsprintf(boxName, "%sFrom", name);
     MasterFromExpect = new CMclMailbox(boxName);
 
     /* Check status. */

@@ -1,8 +1,7 @@
 /* ----------------------------------------------------------------------------
- * expWinSlaveTransport.cpp --
+ * expWinSpawnSocketCli.cpp --
  *
- *	Generic routines for opening the client IPC transport.  Has knowledge
- *	of all transport types used.
+ *	Socket client used as one of the IPC methods for spawndrv.exe
  *
  * ----------------------------------------------------------------------------
  *
@@ -16,8 +15,7 @@
  *	work by Gordon Chaffee <chaffee@bmrc.berkeley.edu> for the WinNT port.
  *
  * Copyright (c) 2001 Telindustrie, LLC
- *	work by David Gravereaux <davygrvy@pobox.com> for full Stubs complience
- *	and any Win32 OS.
+ *	work by David Gravereaux <davygrvy@pobox.com> for any Win32 OS.
  *
  * ----------------------------------------------------------------------------
  * URLs:    http://expect.nist.gov/
@@ -30,30 +28,9 @@
 
 #include "expWinInt.h"
 
-/*
- *----------------------------------------------------------------------
- *  ExpWinSpawnOpenTransport --
- *
- *	The factory method for creating the client IPC transport from
- *	the name asked of it.
- *
- *  Returns:
- *	a polymorphed ExpSpawnTransportCli pointer or NULL for an error.
- *
- *----------------------------------------------------------------------
- */
-ExpSpawnTransportCli *
-ExpWinSpawnOpenTransport(const char *name)
+ExpSpawnSocketCli::ExpSpawnSocketCli(const char *name)
 {
-    /* If the first 2 chars are 'm' and 'b', then it's a mailbox. */
-    if (name[0] == 'm' && name[1] == 'b') {
-	return new ExpSpawnMailboxCli(name);
-    }
-    /* TODO: we can add more transports here when the time is right */
-    /*
-    else if (name[0] == 's' && name[1] == 'k') {
-	return new ExpSpawnSocketCli(name);
-    }
-    */
-    else return 0L;
 }
+
+void ExpSpawnSocketCli::ExpWriteMaster() {};
+void ExpSpawnSocketCli::ExpReadMaster() {};
