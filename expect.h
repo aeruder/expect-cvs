@@ -369,7 +369,7 @@ typedef struct regexp {
 EXTERN regexp *TclRegComp _ANSI_ARGS_((char *exp));
 EXTERN int TclRegExec _ANSI_ARGS_((regexp *prog, char *string, char *start));
 EXTERN void TclRegSub _ANSI_ARGS_((regexp *prog, char *source, char *dest));
-EXTERN void TclRegError _ANSI_ARGS_((char *msg));
+EXTERN void exp_TclRegError _ANSI_ARGS_((char *msg));
 EXTERN char *TclGetRegError _ANSI_ARGS_((void));
 
 # undef TCL_STORAGE_CLASS

@@ -117,7 +117,7 @@ extern unsigned long	strtoul _ANSI_ARGS_((CONST char *string,
 #endif
 
 #include "expect.h"
-static void TclRegError _ANSI_ARGS_((char *));
+#define TclRegError exp_TclRegError
 
 /*
  * regexp code - from tcl8.0.4/generic/regexp.c
@@ -1446,9 +1446,8 @@ char *s2;
  *----------------------------------------------------------------------
  */
 
-static
 void
-TclRegError(string)
+exp_TclRegError(string)
     char *string;			/* Error message. */
 {
     errMsg = string;
