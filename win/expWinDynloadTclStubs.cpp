@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------------------
- * expWinDynloadTclStubs.c --
+ * expWinDynloadTclStubs.cpp --
  *
  *	Grabs and loads tclXX.dll from the EXP_TCLDLL environment variable.
  *
@@ -26,12 +26,15 @@
  * ----------------------------------------------------------------------------
  */
 
-#include "expWinInt.h"
+#include <windows.h>
+#include "tcl.h"
+#include "slavedrvmc.h"
+#include "expWinUtils.hpp"
 
 HMODULE hTclMod;
 
 void
-ExpDynloadTclStubs (void)
+DynloadTclStubs (void)
 {
     TCHAR TclDLLPath[MAX_PATH+1];
     typedef Tcl_Interp *(*LPFN_createInterpProc) ();
