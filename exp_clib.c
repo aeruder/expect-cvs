@@ -2779,6 +2779,23 @@ int fd;
 
 }
 
+static
+void
+exp_setpgrp()
+{
+#ifdef MIPS_BSD
+    /* required on BSD side of MIPS OS <jmsellen@watdragon.waterloo.edu> */
+#   include <sysv/sys.s>
+    syscall(SYS_setpgrp);
+#endif
+
+#ifdef SETPGRP_VOID
+    (void) setpgrp();
+#else
+    (void) setpgrp(0,0);
+#endif
+}
+
 /* returns fd of master side of pty */
 int
 exp_spawnv(file,argv)
@@ -2929,16 +2946,10 @@ when trapping, see below in child half of fork */
 #else
 #ifdef SYSV3
 #ifndef CRAY
-	setpgrp();
+	exp_setpgrp();
 #endif /* CRAY */
 #else /* !SYSV3 */
-#ifdef MIPS_BSD
-	/* required on BSD side of MIPS OS <jmsellen@watdragon.waterloo.edu> */
-#	include <sysv/sys.s>
-	syscall(SYS_setpgrp);
-#endif
-	setpgrp(0,0);
-/*	setpgrp(0,getpid());*/	/* make a new pgrp leader */
+	exp_setpgrp();
 
 #ifdef TIOCNOTTY
 	ttyfd = open("/dev/tty", O_RDWR);
@@ -3772,18 +3783,13 @@ exp_disconnect()
 #else
 #ifdef SYSV3
 	/* put process in our own pgrp, and lose controlling terminal */
-	setpgrp();
+	exp_setpgrp();
 	signal(SIGHUP,SIG_IGN);
 	if (fork()) exit(0);	/* first child exits (as per Stevens, */
 	/* UNIX Network Programming, p. 79-80) */
 	/* second child process continues as daemon */
 #else /* !SYSV3 */
-#ifdef MIPS_BSD
-	/* required on BSD side of MIPS OS <jmsellen@watdragon.waterloo.edu> */
-#	include <sysv/sys.s>
-	syscall(SYS_setpgrp);
-#endif
-	setpgrp(0,getpid());	/* put process in our own pgrp */
+	exp_setpgrp();
 /* Pyramid lacks this defn */
 #ifdef TIOCNOTTY
 	ttyfd = open("/dev/tty", O_RDWR);
@@ -3854,7 +3860,7 @@ char *s;
 	need = strlen(s)*6 + 1;
 	if (need > destlen) {
 		if (dest) ckfree(dest);
-		dest = ckalloc(need);
+		dest = (char *)ckalloc(need);
 		destlen = need;
 	}
 
