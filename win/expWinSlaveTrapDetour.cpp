@@ -1,8 +1,7 @@
 /* ----------------------------------------------------------------------------
- * expWinSlave.hpp --
+ * expWinSlaveTrapDbg.cpp --
  *
- *	Useful definitions used by the slave driver application but not
- *	useful for anybody else.
+ *	.
  *
  * ----------------------------------------------------------------------------
  *
@@ -26,25 +25,19 @@
  * RCS: @(#) $Id$
  * ----------------------------------------------------------------------------
  */
-#ifndef INC_expWinSlave_hpp__
-#define INC_expWinSlave_hpp__
 
-#include <windows.h>
-
-void DynloadTclStubs (void);
-void ShutdownTcl (void);
+#include "expWinSlave.hpp"
 
 
-#include "Mcl/include/CMcl.h"
-#include "slavedrvmc.h"
-#include "expWinUtils.hpp"
-#include "expWinMessage.hpp"
-#include "expWinTestClient.hpp"
-#include "expWinConsoleDebugger.hpp"
-#include "expWinConsoleDetour.hpp"
-#include "expWinSlaveTrap.hpp"
+SlaveTrapDetour::SlaveTrapDetour(int argc, char * const argv[], CMclQueue<Message *> &_mQ)
+    : mQ(_mQ)
+{
+}
 
-void MapToKeys (Message *msg, CMclQueue<Message *> &mQ);
+SlaveTrapDetour::~SlaveTrapDetour()
+{
+}
 
-
-#endif // INC_expWinSlave_hpp__
+void SlaveTrapDetour::Write(Message *msg)
+{
+}
