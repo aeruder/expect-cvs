@@ -34,9 +34,8 @@
  * ----------------------------------------------------------------------------
  */
 
-#include "tclPort.h"
 extern "C" {
-    #include "expWin.h"
+    #include "expWinInt.h"
 }
 
 #include <atlbase.h>
@@ -262,7 +261,7 @@ MsvcDbg_GetCommandLine(void)
 
     // >>>> END IMPORTANT! <<<<
 
-    _itoa(pid, pidChar, 10);
+    itoa(pid, pidChar, 10);
     RegOpenKeyEx(HKEY_LOCAL_MACHINE, "Software\\Tomasoft\\MsDevDbgCtrl",
 	    0, KEY_ALL_ACCESS, &root);
     RegQueryValueEx(root, pidChar, 0, &type, 0L, &size);
