@@ -191,7 +191,7 @@ declare 2 win {
 	void ExpWinSyslog (DWORD errId, ...)
 }
 declare 3 win {
-	TCHAR* ExpSyslogGetSysMsg (DWORD errId)
+	char *ExpSyslogGetSysMsg (DWORD errId)
 }
 declare 4 win {
 	Tcl_Pid	Exp_WaitPid (Tcl_Pid pid, int *statPtr, int options)
