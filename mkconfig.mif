@@ -8,7 +8,7 @@
 #==============================================================================
 
 
-#!error Please set the user defaults in this file before using this build system.
+!error Please set the user defaults in this file before using this build system.
 
 
 #==============================================
