@@ -47,11 +47,9 @@
 #endif
 
 #undef TCL_STORAGE_CLASS
-#if defined(BUILD_spawndriver)
+#if defined(BUILD_slavedriver)
 #   define TCL_STORAGE_CLASS
-extern TCL_CPP void ExpInitWinProcessAPI (void);
-extern TCL_CPP void ExpDynloadTclStubs (void);
-#   include "expWinSlave.h"
+#   include "expWinSlave.hpp"
 #   ifdef _DEBUG
 #	include "MsvcDbgControl.h"
 #   endif
