@@ -40,6 +40,7 @@ void ShutdownTcl (void);
 #include "expWinUtils.hpp"
 #include "expWinMessage.hpp"
 #include "expWinSpawnClient.hpp"
+#include "expWinConsoleDebugger.hpp"
 #include "expWinSlaveTrap.hpp"
 
 #endif // INC_expWinSlave_hpp__

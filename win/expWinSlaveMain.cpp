@@ -172,6 +172,7 @@ DoEvents(SpawnClientTransport *transport, SlaveTrap *slaveCtrl,
 	    break;
 
 	case Message::TYPE_INSTREAM:
+	case Message::TYPE_INRECORD:
 	    //  Send stuff to the slave.
 	    //
 	    slaveCtrl->Write(msg);
@@ -183,8 +184,8 @@ DoEvents(SpawnClientTransport *transport, SlaveTrap *slaveCtrl,
 	    break;
 
 	case Message::TYPE_SLAVEDONE:
-	    //delete slaveCtrl;
-	    Sleep(500);  // bad hack, please ignore for now.
+	    delete slaveCtrl;
+	    //Sleep(500);  // bad hack, please ignore for now.
 	    return 0;
 	}
     }

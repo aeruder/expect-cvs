@@ -34,6 +34,7 @@ class Injector : public CMclThreadHandler
     CMclMailbox *ConsoleDebuggerIPC;
     HANDLE console;
     CMclEvent *interrupt;
+    char sysMsgSpace[512];
 
 public:
 
@@ -99,8 +100,6 @@ private:
 		sysMsgSpace+chars, (512-chars),	0);
 	return sysMsgSpace;
     }
-
-    char sysMsgSpace[512];
 };
 
 CMclEvent *interrupt;

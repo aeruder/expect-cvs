@@ -42,7 +42,7 @@ class ConsoleDebugger : public CMclThreadHandler, ArgMaker
 public:
     ConsoleDebugger(int _argc, char * const *_argv, CMclQueue<Message *> &_mQ);
     ~ConsoleDebugger();
-    void Write (Message *);
+    void WriteRecord (INPUT_RECORD *ir);
 
 private:
     virtual unsigned ThreadHandlerProc(void);
@@ -279,7 +279,7 @@ private:
     PFNVIRTUALALLOCEX pfnVirtualAllocEx;
     PFNVIRTUALFREEEX pfnVirtualFreeEx;
 
-    CMclMailbox *injectorIPC;
+    CMclMailbox *injectorIPC;	// IPC transfer mechanism to the injector dll.
 };
 
 #endif // INC_expWinConsoleDebugger_hpp__

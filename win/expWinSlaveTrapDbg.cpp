@@ -34,18 +34,30 @@
  */
 
 #include "expWinSlave.hpp"
-#include "expWinConsoleDebugger.hpp"
 
 
 SlaveTrapDbg::SlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message *> &_mQ)
     : mQ(_mQ)
 {
-    debuggerThread = new CMclThread(new ConsoleDebugger(argc, argv, _mQ));
+    debugger = new ConsoleDebugger(argc, argv, _mQ);
+    debuggerThread = new CMclThread(debugger);
+}
+
+SlaveTrapDbg::~SlaveTrapDbg()
+{
+    DWORD exitCode;
+
+    debuggerThread->GetExitCode(&exitCode);
+    if (exitCode == STILL_ACTIVE) {
+	debuggerThread->Terminate(128);
+    }
+    delete debuggerThread, debugger;
 }
 
 void SlaveTrapDbg::Write(Message *msg)
 {
-    // inject it from here.. how?
-    delete msg;
-;
+    if (msg->type == Message::TYPE_INRECORD) {
+	debugger->WriteRecord(static_cast<INPUT_RECORD *>(msg->bytes));
+	delete msg;
+    }
 }

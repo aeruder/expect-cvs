@@ -44,9 +44,7 @@ SpawnStdioClient::~SpawnStdioClient()
 
     readThread->GetExitCode(&dwExit);
     if (dwExit == STILL_ACTIVE) {
-	// by cute convention, terminate threads with a 666.
-	//
-	readThread->Terminate(0x666);
+	readThread->Terminate(0x128);
     }
     delete reader;
 }

@@ -29,9 +29,6 @@
 #ifndef INC_expWinSlaveTrap_hpp__
 #define INC_expWinSlaveTrap_hpp__
 
-#include "expWinMessage.hpp"
-#include "Mcl/include/CMcl.h"
-
 class SlaveTrap {
 public:
     virtual void Write(Message *) = 0;
@@ -41,10 +38,13 @@ public:
 class SlaveTrapDbg : public SlaveTrap {
 public:
     SlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message *> &_mQ);
+    ~SlaveTrapDbg();
     virtual void Write(Message *);
+
 private:
+    ConsoleDebugger *debugger;
     CMclQueue<Message *> &mQ;
-    CMclThreadAutoPtr debuggerThread;
+    CMclThread *debuggerThread;
 };
 
 #endif

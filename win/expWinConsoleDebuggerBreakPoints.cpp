@@ -28,7 +28,7 @@
  * ----------------------------------------------------------------------------
  */
 
-#include "expWinConsoleDebugger.hpp"
+#include "expWinSlave.hpp"
 
 // NOTE:  black magic abounds...  be warry young padwon...
 

@@ -39,10 +39,20 @@ public:
     ~Message();
     Message(Message &);
 
-    enum Mode {TYPE_BLANK, TYPE_NORMAL, TYPE_ERROR, TYPE_WARNING, TYPE_INSTREAM, TYPE_FUNCTION, TYPE_SLAVEDONE};
+    enum Mode {
+	TYPE_BLANK,
+	TYPE_NORMAL,
+	TYPE_ERROR,
+	TYPE_WARNING,
+	TYPE_INSTREAM,
+	TYPE_INRECORD,
+	TYPE_FUNCTION,
+	TYPE_SLAVEDONE
+    };
+
     Mode type;
     size_t length;
-    char *bytes;
+    void *bytes;
 };
 
 #endif
