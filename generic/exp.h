@@ -69,7 +69,7 @@
 
 
 /*
- * Fix the Borland bug that's been in tcl.h since when dinosaurs roamed the
+ * Fix the Borland bug that's been in Tcl since when dinosaurs roamed the
  * earth.
  */
 #ifndef TCL_EXTERN
