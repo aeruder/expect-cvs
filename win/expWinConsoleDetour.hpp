@@ -30,7 +30,7 @@
 #define INC_expWinConsoleDetour_hpp__
 
 #include "expWinSlave.hpp"
-
+#include "./Detours/include/detours.h"
 
 class ConsoleDetour : public CMclThreadHandler, ArgMaker
 {
