@@ -70,11 +70,10 @@
 #endif
 
 /*
- * The resource compiler defines this by default.  Skip the rest of this
+ * The windows resource compiler defines this by default.  Skip the rest of this
  * file when included from an rc script.
  */
 #ifndef RC_INVOKED
-
 
 #ifdef TIME_WITH_SYS_TIME
 #   include <sys/time.h>
@@ -86,8 +85,6 @@
 #	include <time.h>
 #   endif
 #endif
-
-
 
 #undef TCL_STORAGE_CLASS
 #if defined(BUILD_spawndriver)
