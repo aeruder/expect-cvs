@@ -346,7 +346,7 @@ declare 2 generic {
 #}
 declare 4 generic {
     struct exp_i *exp_new_i_complex (Tcl_Interp *interp, char *arg,
-	int duration, Tcl_VarTraceProc *updateproc, char *msg)
+	int duration, Tcl_VarTraceProc *updateproc, CONST char *msg)
 }
 declare 5 generic {
     struct exp_i *exp_new_i_simple (struct exp_f *fd, int duration)

@@ -964,10 +964,10 @@ exp_fgets(interp,buf,max)
     /* to see the commands that are about to be executed.  Not seeing */
     /* commands you are supposedly typing sounds very uncomfortable! */
 
-    if (logfile_all || (loguser && logfile)) {
-	fwrite(f->buffer,1,write_count,logfile);
+    if (exp_logfile_all || (exp_loguser && exp_logfile)) {
+	fwrite(f->buffer,1,write_count,exp_logfile);
     }
-    if (debugfile) fwrite(f->buffer,1,write_count,debugfile);
+    if (exp_debugfile) fwrite(f->buffer,1,write_count,exp_debugfile);
 
     f->size -= write_count;
     memcpy(f->buffer,f->buffer+write_count,1+f->size);
@@ -979,9 +979,9 @@ exp_fgets(interp,buf,max)
 #endif /*SHARE_CMD_BUFFER*/
 
 static struct exp_cmd_data cmd_data[]  = {
-    {"exp_version",	0, Exp_ExpVersionCmd,	0,	0},
-    {"prompt1",	0, Exp_Prompt1Cmd,		0,	0},
-    {"prompt2",	0, Exp_Prompt2Cmd,		0,	0},
+    {"exp_version", 0, Exp_ExpVersionCmd,   0,	0},
+    {"prompt1",	    0, Exp_Prompt1Cmd,	    0,	0},
+    {"prompt2",	    0, Exp_Prompt2Cmd,	    0,	0},
     {0}
 };
 

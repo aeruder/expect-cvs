@@ -1077,11 +1077,11 @@ exp_free_i(interp,i,updateproc)
 struct exp_i *
 exp_new_i_complex(interp,arg,duration,updateproc,msg)
     Tcl_Interp *interp;
-    char *arg;		/* spawn id list or a variable containing a list */
-    int duration;	/* if we have to copy the args */
-    /* should only need do this in expect_before/after */
-    Tcl_VarTraceProc *updateproc;	/* proc to invoke if indirect is written */
-    char *msg;		/* Error message identifier */
+    char *arg;	    /* spawn id list or a variable containing a list */
+    int duration;   /* if we have to copy the args */
+		    /* should only need do this in expect_before/after */
+    Tcl_VarTraceProc *updateproc; /* proc to invoke if indirect is written */
+    CONST char *msg;/* Error message identifier */
 {
     struct exp_i *i;
     char **stringp;
