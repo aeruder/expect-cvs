@@ -76,9 +76,6 @@
 #ifndef RC_INVOKED
 
 
-/* according to Karl Vogel, time.h is insufficient on Pyramid */
-/* the following is recommended by autoconf */
-
 #ifdef TIME_WITH_SYS_TIME
 #   include <sys/time.h>
 #   include <time.h>

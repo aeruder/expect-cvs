@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
  * expPlatIntDecls.h --
  *
- *	Declarations of platform specific Expect APIs.
+ *	Declarations of platform specific internal Expect APIs.
  *
  * ----------------------------------------------------------------------------
  *
