@@ -64,7 +64,7 @@ main (void)
     cmdLine = OurGetCmdLine();
 
     //  Use our custom commandline parser to overcome bugs in the default
-    //  crt library.
+    //  crt library as well as allowing us to hook into a GetCommandLine().
     //
     SetArgv(cmdLine, &argc, &argv);
 
@@ -171,7 +171,7 @@ DoEvents(SpawnClientTransport *transport,
 	    break;
 
 	case Message::TYPE_INSTREAM:
-	    //  Send data into the slave.
+	    //  Send stuff to the slave.
 	    //
 	    slaveCtrl->Write(msg);
 	    break;

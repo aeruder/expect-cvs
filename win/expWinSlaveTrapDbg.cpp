@@ -45,4 +45,5 @@ SlaveTrapDbg::SlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message *> &
 
 void SlaveTrapDbg::Write(Message *msg)
 {
+    delete [] msg->bytes;
 }

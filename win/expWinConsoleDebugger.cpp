@@ -1613,3 +1613,14 @@ ConsoleDebugger::LoadedModule(Process *proc, HANDLE hFile, LPVOID modname,
 
     return known;
 }
+
+void
+ConsoleDebugger::WriteMaster(CHAR *buf, DWORD len)
+{
+    Message *msg;
+    msg = new Message;
+    msg->bytes = (BYTE *) _strdup(buf);
+    msg->length = len;
+    msg->type = Message::TYPE_NORMAL;
+    mQ.Put(msg);
+}
