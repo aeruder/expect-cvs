@@ -1309,6 +1309,28 @@ ConsoleDebugger::OnWriteFile(Process *proc,
     ThreadInfo *threadInfo, Breakpoint *brkpt, PDWORD returnValue,
     DWORD direction)
 {
+    HANDLE hFile;		    // handle to file
+    PCHAR lpBuffer;		    // data buffer
+    DWORD nNumberOfBytesToWrite;    // number of bytes to write
+//    LPOVERLAPPED lpOverlapped;	    // overlapped buffer
+    PVOID ptr;
+
+    hFile = (HANDLE) threadInfo->args[0];
+
     // TODO: is this a console handle in the slave?
-    __asm nop;
+    return;
+
+    // Get number of bytes written, if available.
+    ptr = (PVOID) threadInfo->args[4];
+    if (ptr == 0L) {
+	nNumberOfBytesToWrite = threadInfo->args[2];
+    } else {
+	ReadSubprocessMemory(proc, ptr, &nNumberOfBytesToWrite, sizeof(DWORD));
+    }
+
+    ptr = (PVOID) threadInfo->args[1];
+    lpBuffer = new CHAR [nNumberOfBytesToWrite];
+    ReadSubprocessMemory(proc, ptr, lpBuffer, nNumberOfBytesToWrite);
+
+    delete lpBuffer;
 }
