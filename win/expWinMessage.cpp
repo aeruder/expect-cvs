@@ -33,11 +33,10 @@ Message::Message()
     : bytes(0L), length(0), type(TYPE_BLANK)
 {
 }
-/*
-I'm not defining this as a check to see if the Queue is using it :)
+
 Message::Message(Message &other)
 {
     type = other.type;
     bytes = other.bytes;
     length = other.length;
-}*/
+}

@@ -161,7 +161,7 @@ DoEvents(SpawnClientTransport *transport, SlaveTrap *slaveCtrl,
 {
     Message *msg;
 
-    while (mQ.Get(msg, INFINITE, &sd)) {
+    while (mQ.Get(msg, INFINITE)) {
 	switch (msg->type) {
 	case Message::TYPE_NORMAL:
 	case Message::TYPE_ERROR:
@@ -180,9 +180,14 @@ DoEvents(SpawnClientTransport *transport, SlaveTrap *slaveCtrl,
 	    //  Internal mode switching and info gathering.
 	    //
 	    break;
+
+	case Message::TYPE_SLAVEDONE:
+	    //delete slaveCtrl;
+	    Sleep(500);  // bad hack, please ignore for now.
+	    return 0;
 	}
     }
-    delete transport, slaveCtrl;
+    //delete transport, slaveCtrl;
     return 0;
 }
 

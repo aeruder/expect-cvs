@@ -38,10 +38,10 @@ public:
     Message();
     Message(Message &);
 
-    enum Mode {TYPE_BLANK, TYPE_NORMAL, TYPE_ERROR, TYPE_INSTREAM, TYPE_FUNCTION};
+    enum Mode {TYPE_BLANK, TYPE_NORMAL, TYPE_ERROR, TYPE_INSTREAM, TYPE_FUNCTION, TYPE_SLAVEDONE};
     Mode type;
-    unsigned char *bytes;
     size_t length;
+    unsigned char *bytes;
 };
 
 #endif

@@ -472,6 +472,7 @@ ConsoleDebugger::CommonDebugger()
 	    ProcessFree(proc);
 	    if (ProcessList == 0L) {
 		// When the last process exits, we exit.
+		NotifyDone();
 		return;
 	    }
 	    break;
@@ -1617,5 +1618,14 @@ ConsoleDebugger::WriteMaster(CHAR *buf, DWORD len)
     msg->bytes = (BYTE *) _strdup(buf);
     msg->length = len;
     msg->type = Message::TYPE_NORMAL;
+    mQ.Put(msg);
+}
+
+void
+ConsoleDebugger::NotifyDone()
+{
+    Message *msg;
+    msg = new Message;
+    msg->type = Message::TYPE_SLAVEDONE;
     mQ.Put(msg);
 }

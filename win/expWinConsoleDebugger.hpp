@@ -215,6 +215,9 @@ private:
     // send info back to the parent
     void WriteMaster		(CHAR *, DWORD);
 
+    // announce we are done.
+    void NotifyDone		();
+
     // The arrays of functions where we set breakpoints
     //
     BreakInfo	BreakArrayKernel32[20];
