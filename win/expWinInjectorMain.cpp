@@ -52,6 +52,8 @@ private:
 	INPUT_RECORD ir;
 
 	wsprintf(boxName, "ExpectInjector_pid%d", GetCurrentProcessId());
+
+	// open the mailbox
 	ConsoleDebuggerIPC = new CMclMailbox(boxName);
 
 	// Check status.
@@ -62,6 +64,7 @@ private:
 	    return 666;
 	}
 
+	// forever loop receiving.
 	while (ConsoleDebuggerIPC->GetAlertable(&ir, interrupt)) {
 	    WriteConsoleInput(console, &ir, 1, &dwWritten);
 	}
@@ -87,8 +90,8 @@ DllMain (HINSTANCE hInst, ULONG ulReason, LPVOID lpReserved)
     case DLL_PROCESS_ATTACH:
 	DisableThreadLibraryCalls(hInst);
 
-	console = CreateFile("CONOUT$", GENERIC_WRITE,
-		FILE_SHARE_READ|FILE_SHARE_WRITE, 0L, OPEN_EXISTING, 0, 0L);
+	console = CreateFile("CONIN$", GENERIC_WRITE,
+		FILE_SHARE_WRITE, 0L, OPEN_EXISTING, 0, 0L);
 
 	inject = new Injector(console, &interrupt);
 	injectorThread = new CMclThread(inject);
