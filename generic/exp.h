@@ -160,8 +160,8 @@
 #define EXP_FULLBUFFER	-5
 #define EXP_MATCH	-6
 #define EXP_NOMATCH	-7
-#define EXP_CANTMATCH	EXP_NOMATCH
-#define EXP_CANMATCH	-8
+/*#define EXP_CANTMATCH	EXP_NOMATCH
+#define EXP_CANMATCH	-8*/
 #define EXP_DATA_NEW	-9	/* if select says there is new data */
 #define EXP_DATA_OLD	-10	/* if we already read data in another cmd */
 #define EXP_EOF		-11
@@ -192,18 +192,6 @@
 #define EXP_TIME_INFINITY	-1
 #define EXP_SPAWN_ID_BAD	-1
 
-/* from expect_tcl.h */
-//TCL_EXTERN(int)		exp_getpidproc _ANSI_ARGS_((void));
-
-extern char *exp_onexit_action;
-extern Tcl_Channel exp_debugfile;
-extern Tcl_Channel exp_logfile;
-extern int exp_logfile_all;
-extern int exp_loguser;
-extern int exp_is_debugging; /* useful to know for avoid debug calls */
-
-			/* app-specific exit handler */
-//TCL_EXTERN(void)	*exp_app_exit _ANSI_ARGS_((Tcl_Interp *));
 
 /*
  * Include the public function declarations that are accessible via
