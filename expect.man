@@ -451,14 +451,18 @@ Spawned processes that continue to run will be inherited by init.
 .B exit
 is implicitly executed if the end of the script is reached.
 .TP
-.B exp_continue
+\fBexp_continue\fR [-continue_timer]
 The command
 .B exp_continue
 allows
 .B expect
 itself to continue
-executing rather than returning as it normally would.
-(See
+executing rather than returning as it normally would. By
+default
+.B exp_continue
+resets the timeout timer. The
+.I -continue_timer
+flag prevents timer from being restarted. (See
 .B expect
 for more information.)
 .TP
@@ -783,7 +787,7 @@ Normally, the matched output is discarded from Expect's internal buffers.
 This may be prevented by prefixing a pattern with the
 .B \-notransfer
 flag.  This flag is especially useful in experimenting (and can be
-abbreviated to "-n" for convenience while experimenting).
+abbreviated to "-not" for convenience while experimenting).
 
 The spawn id associated with the matching output (or eof or
 full_buffer) is stored in
@@ -1252,7 +1256,7 @@ If you really want to send a SIGSTOP to such a process (by ^Z),
 consider spawning csh first and then running your program.
 On the other hand, if you want to send a SIGSTOP to
 .B Expect
-itself, first press the escape character, and then press ^Z.
+itself, first call interpreter (perhaps by using an escape character), and then press ^Z.
 .IP
 String-body pairs can be used as a shorthand for avoiding having
 to enter the interpreter and execute commands interactively.  The previous
@@ -1424,7 +1428,7 @@ by using indirect spawn ids.  (Indirect spawn ids are described in the
 section on the expect command.)  Indirect spawn ids may be specified
 with the -i, -u, -input, or -output flags.
 .TP
-.B interpreter
+.B interpreter " [args]"
 causes the user to be interactively prompted for
 .B Expect
 and Tcl commands.
@@ -1466,6 +1470,12 @@ prompt may be set by defining a procedure called "prompt2".
 During
 .BR interpreter ,
 cooked mode is used, even if the its caller was using raw mode.
+.IP
+If stdin is closed,
+.B interpreter
+will return unless the
+.B \-eof
+flag is used, in which case the subsequent argument is invoked.
 .TP
 .BI log_file " [args] [[\-a] file]"
 If a filename is provided,
@@ -1643,7 +1653,7 @@ If the spawn_id is
 .IR user_spawn_id ,
 and the terminal is in raw mode, newlines in the string are translated
 to return-newline
-sequences so that they appear as it the terminal was in cooked mode.
+sequences so that they appear as if the terminal was in cooked mode.
 The
 .B \-raw
 flag disables this translation.
@@ -2159,7 +2169,7 @@ If you want to define your own trap on SIGINT but still trap to the
 debugger when it is running, use:
 .nf
 
-    if ![exp_debug] {trap mystuff SIGINT}
+    if {![exp_debug]} {trap mystuff SIGINT}
 
 .fi
 Alternatively, you can trap to the debugger using some other signal.
@@ -2405,6 +2415,12 @@ both strategies:
     }
 
 .fi
+
+trap \-code will not work with any command that sits in Tcl's event
+loop, such as sleep.  The problem is that in the event loop, Tcl
+discards the return codes from async event handlers.  A workaround is
+to set a flag in the trap code.  Then check the flag immediately after
+the command (i.e., sleep).
 
 .SH EXPECT HINTS
 There are a couple of things about

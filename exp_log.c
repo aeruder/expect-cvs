@@ -188,7 +188,14 @@ int force_stdout;	/* override value of logUser */
     length = strlen(buf);
     expDiagWriteBytes(buf,length);
     if (tsdPtr->logAll || (LOGUSER && tsdPtr->logChannel)) Tcl_WriteChars(tsdPtr->logChannel,bigbuf,-1);
-    if (LOGUSER) fwrite(buf,1,length,stdout);
+    if (LOGUSER) {
+#if (TCL_MAJOR_VERSION > 8) || ((TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION >= 1))
+      Tcl_WriteChars (Tcl_GetStdChannel (TCL_STDOUT), buf, length);
+      Tcl_Flush      (Tcl_GetStdChannel (TCL_STDOUT));
+#else
+      fwrite(buf,1,length,stdout);
+#endif
+    }
 }
 
 /* send to log if open */
@@ -262,7 +269,7 @@ expDiagLog TCL_VARARGS_DEF(char *,arg1)
    this also takes care of arbitrary large strings */
 void
 expDiagLogU(str)
-    char *str;
+char *str;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
@@ -358,8 +365,8 @@ expDiagWriteObj(obj)
 /* write 8-bit bytes */
 void
 expDiagWriteBytes(str,len)
-    char *str;
-    int len;
+char *str;
+int len;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
@@ -371,8 +378,8 @@ expDiagWriteBytes(str,len)
 /* write UTF chars */
 void
 expDiagWriteChars(str,len)
-    char *str;
-    int len;
+char *str;
+int len;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
@@ -449,6 +456,7 @@ expLogChannelOpen(interp,filename,append)
     }
     Tcl_RegisterChannel(interp,tsdPtr->logChannel);
     Tcl_SetChannelOption(interp,tsdPtr->logChannel,"-buffering","none");
+    expLogAppendSet(append);
     return TCL_OK;
 }
 

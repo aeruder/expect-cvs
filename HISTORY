@@ -3,6 +3,82 @@ support are in ChangeLog. - Don
 
 Date	Version	Description
 -------	-------	------------------------------------------------------
+7/18/02 5.38.0	At request of Hugh Sasse <hgs@dmu.ac.uk> added md5 hash of gz
+		to homepage.
+
+		Dave Schooler <dave@stashtea.com> reported that send -s wasn't
+		handling certains chars correctly.  Turned out to be those
+		that had multibyte UTF8 reps.  send -s was just pumping out
+		hunks of bytes without regard to UTF boundaries and evidentally
+		Tcl's I/O engine thought that it should translate a partial
+		UTF8 character into, uh, something else.
+
+		Curt Shroeder <c.schroeder@computer.org> fixed bug in rftp - a
+		a filename looked enough like a 3-digit diagnostic that the
+		script got confused.
+
+4/16/02 5.37.2	Multixterm couldn't find man page all the time.
+
+4/16/02 5.37.1	Made multixterm handle user-supplied args.
+
+4/15/02 5.37.0	Added multixterm to example directory.
+
+4/8/02	5.36.1	Backed out CONST qualifiers.  Too much trouble with older
+		versions of Tcl.  I'll let someone else worry about them.
+
+4/8/02	5.36.0	Made first cut at multixterm, a replacement for crlogin.
+
+		Fixed bug in background handler.  If an action waited on the
+		same spawn id, esPtr would become invalidated.
+
+		Ryan Schmidt <rschmidt@mac.com> noted configure didn't
+		recognize MacOS X.  Downloaded new config.guess.
+
+		Andreas Kupries <andreask@activestate.com> provided CONST
+		patches to accomodate Tcl changes per TIP 27.
+
+2/25/02 5.35.0	Joe Eggleston <joe@arbor.net> noted bug in full_buffer test.
+		The test hadn't been I18'd properly and was testing chars
+		instead of bytes.  Also fixed diagnostics so it printed when
+		it was testing full buffer even if there wasn't one.
+
+2/7/02	5.34.1	Bruce Hartweg <brhartweg@bigfoot.com> noted that direct spawn
+		ids were not being tested so something like "expect -i exp9999"
+		would dump core.  Evidentally a bug from the 5.31 transition.
+
+12/20/01 5.34.0	Don Porter <don.porter@nist.gov> provided package-related
+		fixes for test suite.
+
+		Brian Theado <brian.theado@usa.net> noted that interact's -re
+		support broke when offsets kicked in.  Turned out that the
+		regexp engine supports them during execution but the results
+		are delivered RELATIVE to the offset.  (I suspect this was done
+		due to expediency.)
+
+10/1/01 5.33.0	<mark@doradosoftware.com> found that expect's diagnostics
+		didn't include the "no" after testing for a full buffer.
+
+		Hemang Lavana <hlavana@cisco.com> noted that "debug" (Dbg_On)
+		calls didn't always force the debugger into step mode.
+
+		Martin Kammerhofer <dada@sbox.tugraz.at> noted that the man
+		page neglected to document interpreter -eof.
+
+		Chris Clare <clarec@nortelnetworks.com> provided fix for
+		multiple decl in C lib.
+
+		Sheng Wang <wangs@sh.bel.alcatel.be> found interact's
+		can-match code had broken.  It was missing the special hook
+		that Henry had added just for this purpose.  How strange.
+
+		Dieter Fiebelkorn <dieter@fiebelkorn.net> requested addition
+		to config.guess for Power*Macintosh:Darwin for MacOSX.
+		Aside - to download latest config.guess:
+		 cvs -d :pserver:anoncvs@subversions.gnu.org:/cvs co \
+		 autoconf/config
+
+		Added pipeline example to unbuffer man page.
+
 8/4/00 5.32.2	Allen J. Newton <anewton@alturia.fleet.org> provided code for
 		generating passwords with special characters in mkpasswd.
 

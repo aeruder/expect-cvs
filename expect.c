@@ -517,6 +517,7 @@ Tcl_Obj *CONST objv[];		/* Argument objects. */
 		ec.i_list = exp_new_i_complex(interp,
 				      Tcl_GetString(objv[i]),
 				      eg->duration, exp_indirect_update2);
+		if (!ec.i_list) goto error;
 		ec.i_list->cmdtype = eg->cmdtype;
 
 		/* link new i_list to head of list */
@@ -840,7 +841,7 @@ char *suffix;
 	    return(EXP_MATCH);
 	} else expDiagLogU(no);
     } else if (e->use == PAT_NULL) {
-	char *p;
+	CONST char *p;
 	expDiagLogU("null? ");
 	p = Tcl_UtfFindFirst(str, 0);
 
@@ -853,16 +854,21 @@ char *suffix;
 	    return EXP_MATCH;
 	}
 	expDiagLogU(no);
-    } else if ((Tcl_GetCharLength(esPtr->buffer) == esPtr->msize)
+    } else if (e->use == PAT_FULLBUFFER) {
+      expDiagLogU(Tcl_GetString(e->pat));
+      expDiagLogU("? ");
+      /* this must be the same test as in expIRead */
+      if ((expSizeGet(esPtr) + TCL_UTF_MAX >= esPtr->msize)
 	    && (length > 0)) {
-	expDiagLogU(Tcl_GetString(e->pat));
-	expDiagLogU("? ");
 	o->e = e;
 	o->match = length;
 	o->buffer = esPtr->buffer;
 	o->esPtr = esPtr;
 	expDiagLogU(yes);
 	return(EXP_FULLBUFFER);
+      } else {
+	expDiagLogU(no);
+      }
     }
     return(EXP_NOMATCH);
 }
@@ -1454,7 +1460,7 @@ ExpState *esPtr;
     char *string;
     int excessBytes;
     char *excessGuess;
-    char *p;
+    CONST char *p;
 
     /*
      * Resize buffer to user's request * 2 + 1.
@@ -1833,7 +1839,12 @@ char *caller_name;
     /* crawl our way into the middle of the string
      * to make sure we are at a UTF char boundary
      */
-    for (p=str;*p;p = Tcl_UtfNext(p)) {
+
+    /* TIP 27: We cast CONST away to allow the restoration the lostByte later on
+     * See 'restore damage' below.
+     */
+
+    for (p=str;*p;p = (char*) Tcl_UtfNext(p)) {
 	if (p > middleGuess) break;   /* ok, that's enough */
     }
 
@@ -1928,7 +1939,7 @@ get_timeout(interp)
 Tcl_Interp *interp;
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
-    char *t;
+    CONST char *t;
 
     if (NULL != (t = exp_get_var(interp,EXPECT_TIMEOUT))) {
 	tsdPtr->timeout = atoi(t);
@@ -2252,6 +2263,8 @@ exp_background_channelhandler(clientData,mask) /* INTL */
 ClientData clientData;
 int mask;
 {
+  char backup[EXP_CHANNELNAMELEN+1]; /* backup copy of esPtr channel name! */
+
     ExpState *esPtr;
     Tcl_Interp *interp;
     int cc;			/* number of bytes returned in a single read */
@@ -2263,6 +2276,10 @@ int mask;
 
     /* restore our environment */
     esPtr = (ExpState *)clientData;
+
+    /* backup just in case someone zaps esPtr in the middle of our work! */
+    strcpy(backup,esPtr->name); 
+
     interp = esPtr->bg_interp;
 
     /* temporarily prevent this handler from being invoked again */
@@ -2346,6 +2363,13 @@ do_more_data:
      * exitWhenBgStatusUnblocked will be 1 and we should disable the channel
      * handler and release the esPtr.
      */
+
+    /* First check that the esPtr is even still valid! */
+    /* This ought to be sufficient. */
+    if (0 == Tcl_GetChannel(interp,backup,(int *)0)) {
+      expDiagLog("expect channel %s lost in background handler\n",backup);
+      return;
+    }
 
     if ((!esPtr->freeWhenBgHandlerUnblocked) && (esPtr->bg_status == blocked)) {
 	if (0 != (cc = expSizeGet(esPtr))) {

@@ -7,6 +7,9 @@ dollars.  Therefore it is public domain.  However, the author and NIST
 would appreciate credit if this program or parts of it are used.
 */
 
+/* Don't use stubs since we are in the main application. */
+#undef USE_TCL_STUBS
+
 #include "expect_cf.h"
 #include <stdio.h>
 #include "tcl.h"
@@ -18,6 +21,8 @@ int argc;
 char *argv[];
 {
 	int rc = 0;
+	char buffer [30];
+
 	Tcl_Interp *interp = Tcl_CreateInterp();
 	Tcl_FindExecutable(argv[0]);
 
@@ -43,7 +48,11 @@ char *argv[];
 
 	/* assert(exp_cmdlinecmds != 0) */
 
-	Tcl_Exit(rc);
+	/* SF #439042 -- Allow overide of "exit" by user / script
+	 */
+
+	sprintf(buffer, "exit %d", rc);
+	Tcl_Eval(interp, buffer); 
 	/*NOTREACHED*/
 	return 0;		/* Needed only to prevent compiler warning. */
 }

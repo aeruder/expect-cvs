@@ -65,8 +65,12 @@ static void
 usage(interp)
 Tcl_Interp *interp;
 {
+  char buffer [] = "exit 1";
   expErrorLog("usage: expect [-div] [-c cmds] [[-f] cmdfile] [args]\r\n");
-  Tcl_Exit(1);
+
+  /* SF #439042 -- Allow overide of "exit" by user / script
+   */
+  Tcl_Eval(interp, buffer); 
 }
 
 /* this clumsiness because pty routines don't know Tcl definitions */
@@ -147,7 +151,7 @@ Tcl_Interp *interp;
        maintain our own static version */
 
     static int nextid = 0;
-    char *nextidstr = Tcl_GetVar2(interp,"tcl::history","nextid",0);
+    CONST char *nextidstr = Tcl_GetVar2(interp,"tcl::history","nextid",0);
     if (nextidstr) {
 	/* intentionally ignore failure */
 	(void) sscanf(nextidstr,"%d",&nextid);
@@ -450,9 +454,15 @@ char **argv;
 			exp_argv0,user_version,exp_version);
 		return(TCL_ERROR);
 	}
-	expErrorLog("%s: requires Expect version %s (but using %s)\r\n",
+	expErrorLog("%s requires Expect version %s (but is using %s)\r\n",
 		exp_argv0,user_version,exp_version);
-	Tcl_Exit(1);
+
+	/* SF #439042 -- Allow overide of "exit" by user / script
+	 */
+	{
+	  char buffer [] = "exit 1";
+	  Tcl_Eval(interp, buffer); 
+	}
 	/*NOTREACHED*/
 }
 
@@ -464,17 +474,30 @@ if {$exp_exec_library != \"\"} {\n\
     lappend auto_path $exp_exec_library\n\
 }";
 
+static void
+DeleteCmdInfo (clientData, interp)
+     ClientData clientData;
+     Tcl_Interp *interp;
+{
+  ckfree (clientData);
+}
+
+
 int
 Expect_Init(interp)
 Tcl_Interp *interp;
 {
     static int first_time = TRUE;
 
+    Tcl_CmdInfo* close_info  = NULL;
+    Tcl_CmdInfo* return_info = NULL;
+
     if (first_time) {
 	int tcl_major = atoi(TCL_VERSION);
 	char *dot = strchr(TCL_VERSION,'.');
 	int tcl_minor = atoi(dot+1);
 
+#ifndef USE_TCL_STUBS
 	if (tcl_major < NEED_TCL_MAJOR || 
 	    (tcl_major == NEED_TCL_MAJOR && tcl_minor < NEED_TCL_MINOR)) {
 	    sprintf(interp->result,
@@ -483,17 +506,56 @@ Tcl_Interp *interp;
 		    NEED_TCL_MAJOR,NEED_TCL_MINOR);
 	    return TCL_ERROR;
 	}
+#endif
+    }
 
-	if (Tcl_PkgRequire(interp, "Tcl", TCL_VERSION, 0) == NULL) {
-	    return TCL_ERROR;
-	}
-	if (Tcl_PkgProvide(interp, "Expect", EXP_VERSION) != TCL_OK) {
-	    return TCL_ERROR;
-	}
+#ifndef USE_TCL_STUBS
+    if (Tcl_PkgRequire(interp, "Tcl", TCL_VERSION, 0) == NULL) {
+      return TCL_ERROR;
+    }
+#else
+    if (Tcl_InitStubs(interp, "8.1", 0) == NULL) {
+      return TCL_ERROR;
+    }
+#endif
 
-	Tcl_Preserve(interp);
-	Tcl_CreateExitHandler(Tcl_Release,(ClientData)interp);
+    /*
+     * 	Save initial close and return for later use
+     */
 
+    close_info = (Tcl_CmdInfo*) ckalloc (sizeof (Tcl_CmdInfo));
+    if (Tcl_GetCommandInfo(interp, "close", close_info) == 0) {
+        ckfree ((char*) close_info);
+        return TCL_ERROR;
+    }
+    return_info = (Tcl_CmdInfo*) ckalloc (sizeof (Tcl_CmdInfo));
+    if (Tcl_GetCommandInfo(interp, "return", return_info) == 0){
+        ckfree ((char*) close_info);
+        ckfree ((char*) return_info);
+	return TCL_ERROR;
+    }
+    Tcl_SetAssocData (interp, EXP_CMDINFO_CLOSE,  DeleteCmdInfo, (ClientData) close_info);
+    Tcl_SetAssocData (interp, EXP_CMDINFO_RETURN, DeleteCmdInfo, (ClientData) return_info);
+
+    /*
+     * Expect redefines close so we need to save the original (pre-expect)
+     * definition so it can be restored before exiting.
+     *
+     * Needed when expect is dynamically loaded after close has
+     * been redefined e.g. the virtual file system in tclkit
+     */
+    if (TclRenameCommand(interp, "close", "_close.pre_expect") != TCL_OK) {
+        return TCL_ERROR;
+    }
+ 
+    if (Tcl_PkgProvide(interp, "Expect", EXP_VERSION) != TCL_OK) {
+      return TCL_ERROR;
+    }
+
+    Tcl_Preserve(interp);
+    Tcl_CreateExitHandler(Tcl_Release,(ClientData)interp);
+
+    if (first_time) {
 	exp_getpid = getpid();
 	exp_init_pty();
 	exp_init_pty_exit();
@@ -594,7 +656,16 @@ char **argv;
 
 	Tcl_Eval(interp,sigexit_init_default);
 
-	while ((c = getopt(argc, argv, "b:c:dD:f:inN-v")) != EOF) {
+	/*
+	 * [#418892]. The '+' character in front of every other option
+         * declaration causes 'GNU getopt' to deactivate its
+         * non-standard behaviour and switch to POSIX. Other
+         * implementations of 'getopt' might recognize the option '-+'
+         * because of this, but the following switch will catch this
+         * and generate a usage message.
+	 */
+
+	while ((c = getopt(argc, argv, "+b:c:dD:f:inN-v")) != EOF) {
 		switch(c) {
 		case '-':
 			/* getopt already handles -- internally, however */
@@ -618,7 +689,13 @@ char **argv;
 			exp_tcl_debugger_available = TRUE;
 			if (Tcl_GetInt(interp,optarg,&rc) != TCL_OK) {
 			    expErrorLog("%s: -D argument must be 0 or 1\r\n",exp_argv0);
-			    Tcl_Exit(1);
+
+			    /* SF #439042 -- Allow overide of "exit" by user / script
+			     */
+			    {
+			      char buffer [] = "exit 1";
+			      Tcl_Eval(interp, buffer); 
+			    }
 			}
 
 			/* set up trap handler before Dbg_On so user does */
@@ -648,7 +725,13 @@ char **argv;
 			break;
 		case 'v':
 			printf("expect version %s\n", exp_version);
-			Tcl_Exit(0);
+
+			/* SF #439042 -- Allow overide of "exit" by user / script
+			 */
+			{
+			  char buffer [] = "exit 0";
+			  Tcl_Eval(interp, buffer); 
+			}
 			break;
 		default: usage(interp);
 		}
@@ -670,6 +753,20 @@ char **argv;
 		if (!exp_cmdfilename && (optind < argc)) {
 			exp_cmdfilename = argv[optind];
 			optind++;
+
+			/*
+			 * [#418892]. Skip a "--" found immediately
+			 * behind the name of the script to
+			 * execute. Don't try this if there are no
+			 * arguments behind the "--" anymore. All
+			 * other appearances of "--" are handled by
+			 * the "getopt"-loop above.
+			 */
+
+			if ((optind < argc) &&
+			    (0 == strcmp ("--", argv[optind]))) {
+			    optind++;
+			}
 		}
 
 		if (exp_cmdfilename) {
@@ -683,7 +780,7 @@ char **argv;
 					exp_cmdfilename = 0;
 					expCloseOnExec(fileno(exp_cmdfile));
 				} else {
-					char *msg;
+					CONST char *msg;
 
 					if (errno == 0) {
 						msg = "could not read - odd file name?";
@@ -691,7 +788,13 @@ char **argv;
 						msg = Tcl_ErrnoMsg(errno);
 					}
 					expErrorLog("%s: %s\r\n",exp_cmdfilename,msg);
-					Tcl_Exit(1);
+
+					/* SF #439042 -- Allow overide of "exit" by user / script
+					 */
+					{
+					  char buffer [] = "exit 1";
+					  Tcl_Eval(interp, buffer); 
+					}
 				}
 			}
 		} else if (!exp_cmdlinecmds) {
@@ -755,7 +858,12 @@ int sys_rc;
 			expErrorLogU(interp->result);
 			expErrorLogU("\r\n");
 		    }
-		    Tcl_Exit(1);
+		    /* SF #439042 -- Allow overide of "exit" by user / script
+		     */
+		    {
+		      char buffer [] = "exit 1";
+		      Tcl_Eval(interp, buffer); 
+		    }
 		}
 		close(fd);
 	    }
@@ -778,7 +886,12 @@ int sys_rc;
 			    expErrorLogU(interp->result);
 			    expErrorLogU("\r\n");
 			}
-			Tcl_Exit(1);
+			/* SF #439042 -- Allow overide of "exit" by user / script
+			 */
+			{
+			  char buffer [] = "exit 1";
+			  Tcl_Eval(interp, buffer); 
+			}
 		    }
 		    close(fd);
 	        }

@@ -10,8 +10,8 @@ AC_INIT(expect.h)
 # note when updating version numbers here, also update pkgIndex.in (see
 # comments in Makefile)
 EXP_MAJOR_VERSION=5
-EXP_MINOR_VERSION=32
-EXP_MICRO_VERSION=2
+EXP_MINOR_VERSION=38
+EXP_MICRO_VERSION=0
 EXP_VERSION=$EXP_MAJOR_VERSION.$EXP_MINOR_VERSION
 EXP_VERSION_NODOTS=$EXP_MAJOR_VERSION$EXP_MINOR_VERSION
 EXP_VERSION_FULL=$EXP_VERSION.$EXP_MICRO_VERSION
@@ -32,19 +32,11 @@ echo "configuring Expect $EXP_MAJOR_VERSION.$EXP_MINOR_VERSION.$EXP_MICRO_VERSIO
 # development.
 # Test if configure is older than configure.in and explain if no autoconf
 AC_CHECK_PROG(found,autoconf,yes,no,)
-AC_MSG_CHECKING([configure up to date])
-for i in `ls -tr ${srcdir}/configure ${srcdir}/configure.in ${srcdir}/Makefile.in` ; do
-  newest=$i
-done
-if test "$srcdir/configure" = "$newest" ; then
-  AC_MSG_RESULT(yes)
-else
-  AC_MSG_RESULT(no)
-fi
-if test $found = "no" -a "$newest" != "$srcdir/configure" ; then
-  AC_MSG_WARN([$srcdir/configure appears to be old ($srcdir/configure.in and/or $srcdir/Makefile.in are newer) and the autoconf program to fix this situation was not found.  If you've no idea what this means, enter the command \"touch $srcdir/configure\" and restart $srcdir/configure.])
-  exit
-fi
+
+# Removed the checking and complaint. It makes automatic building
+# straight out of the CVS a true hassle simply because the build
+# can stop anytime and randomly (platform dependent, cvs dependent)
+
 
 dnl AC_CONFIG_AUX_DIR(`cd $srcdir;pwd`/..)
 AC_CANONICAL_SYSTEM
@@ -308,6 +300,18 @@ if test "$enable_shared" = "yes" && test "x${TCL_SHLIB_SUFFIX}" != "x" ; then
   AC_MSG_RESULT(both shared and unshared)
 else
   AC_MSG_RESULT(unshared)
+fi
+
+# now see if we can/should use Tcl stubs
+AC_MSG_CHECKING([whether to use Tcl stubs])
+AC_ARG_ENABLE(stubs,
+	[  --enable-stubs     use Tcl stubs, if available],
+	[enable_stubs=$enableval], [enable_stubs=no])
+if test "$enable_shared" = "yes" && test "$enable_stubs" = "yes" && test "x${TCL_SUPPORTS_STUBS}" = "x1"; then
+  AC_MSG_RESULT(yes)
+  EXP_CFLAGS="$EXP_CFLAGS -DUSE_TCL_STUBS"
+else
+  AC_MSG_RESULT(no)
 fi
 
 #
@@ -1132,7 +1136,7 @@ if test $ac_cv_sys_long_file_names = no; then
 fi
 
 EXP_BUILD_LIB_SPEC="-L`pwd` -lexpect${EXP_LIB_VERSION}${DBGX}"
-EXP_LIB_SPEC="-L\${INSTALL_ROOT}\${exec_prefix}/lib -lexpect${EXP_LIB_VERSION}${DBGX}"
+EXP_LIB_SPEC="-L\${tcl_libdir} -lexpect${EXP_LIB_VERSION}${DBGX}"
 EXP_UNSHARED_LIB_FILE=libexpect${EXP_LIB_VERSION}${DBGX}.a
 
 # The TCL_SHARED_LIB_SUFFIX macro below relies on the DBGX macro,
@@ -1160,12 +1164,14 @@ fi
 # to hitting config's max symbols, pack everything together here and
 # do test ourselves.  Ugh.  
 #
-if test "x$TCL_SHLIB_LD_LIBS" = "x" ; then
+if test "$enable_stubs" = "yes"; then
+    EXP_SHLIB_LD_LIBS="$TCL_BUILD_STUB_LIB_SPEC $TCL_DL_LIBS $LIBS $LIBS -lc"
+elif test "x$TCL_SHLIB_LD_LIBS" = "x" ; then
 	EXP_SHLIB_LD_LIBS="$LIBS"
 else
 	# seems a little strange to build in Tcl's build-lib, but
 	# that's what Tk does.
-	EXP_SHLIB_LD_LIBS="$TCL_BUILD_LIB_SPEC $TCL_DL_LIBS $LIBS -lc"
+	  EXP_SHLIB_LD_LIBS="$TCL_BUILD_LIB_SPEC $TCL_DL_LIBS $LIBS -lc"
 fi
 
 #--------------------------------------------------------------------

@@ -32,6 +32,9 @@
 static char sccsid[] = "@(#) tkAppInit.c 1.19 95/12/23 17:09:24";
 #endif /* not lint */
 
+/* Don't use stubs since we are in the main application. */
+#undef USE_TCL_STUBS
+
 #include <ctype.h>
 
 #include "tk.h"
@@ -39,6 +42,8 @@ static char sccsid[] = "@(#) tkAppInit.c 1.19 95/12/23 17:09:24";
 #include "expect_tcl.h"
 #include "tcldbg.h"
 
+#if (TCL_MAJOR_VERSION < 8) || ((TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION < 4))
+/* This is now version dependent. In 8.4+ this is erroneous */
 /*
  * The following variable is a special hack that is needed in order for
  * Sun shared libraries to be used for Tcl.
@@ -46,6 +51,7 @@ static char sccsid[] = "@(#) tkAppInit.c 1.19 95/12/23 17:09:24";
 
 extern int matherr();
 int *tclDummyMathPtr = (int *) matherr;
+#endif
 
 #ifdef TK_TEST
 EXTERN int		Tktest_Init _ANSI_ARGS_((Tcl_Interp *interp));
@@ -158,7 +164,7 @@ static int numMainWindows;
  */
 
 static int synchronize;
-static char *name;
+static CONST char *name;
 static char *display;
 static char *geometry;
 static char *colormap;
@@ -237,7 +243,8 @@ int
 Tk_Init2(interp)
     Tcl_Interp *interp;		/* Interpreter to initialize. */
 {
-    char *p;
+    CONST char *p;
+    char* alist, *cstr;
     int argc, code;
     char **argv, *args[20];
     Tcl_DString class;
@@ -270,14 +277,20 @@ Tk_Init2(interp)
 	if (print_version) {
 	    extern char exp_version[];
 	    printf ("expectk version %s\n", exp_version);
-	    Tcl_Exit(0);
+
+	    /* SF #439042 -- Allow overide of "exit" by user / script
+	     */
+	    {
+	      char buffer [] = "exit 0";
+	      Tcl_Eval(interp, buffer); 
+	    }
 	}
 
-	p = Tcl_Merge(argc, argv);
-	Tcl_SetVar2(interp, "argv", (char *) NULL, p, TCL_GLOBAL_ONLY);
+	alist = Tcl_Merge(argc, argv);
+	Tcl_SetVar2(interp, "argv", (char *) NULL, alist, TCL_GLOBAL_ONLY);
 	sprintf(buffer, "%d", argc);
 	Tcl_SetVar2(interp, "argc", (char *) NULL, buffer, TCL_GLOBAL_ONLY);
-	ckfree(p);
+	ckfree(alist);
     }
 
     /*
@@ -297,9 +310,9 @@ Tk_Init2(interp)
     }
     Tcl_DStringInit(&class);
     Tcl_DStringAppend(&class, name, -1);
-    p = Tcl_DStringValue(&class);
-    if (islower(*p)) {
-	*p = toupper((unsigned char) *p);
+    cstr = Tcl_DStringValue(&class);
+    if (islower(*cstr)) {
+	*cstr = toupper((unsigned char) *cstr);
     }
 
     /*
@@ -344,9 +357,11 @@ Tk_Init2(interp)
 	goto done;
     }
     Tcl_ResetResult(interp);
+#ifndef MAC_OSX_TK
     if (synchronize) {
 	XSynchronize(Tk_Display(Tk_MainWindow(interp)), True);
     }
+#endif
 
     /*
      * Set the geometry of the main window, if requested.  Put the

@@ -28,7 +28,7 @@ void	expDiagLogPtrX      _ANSI_ARGS_((char *,int));
 void	expDiagLogPtrStr    _ANSI_ARGS_((char *,char *));
 void	expDiagLogPtrStrStr _ANSI_ARGS_((char *,char *,char *));
 void	expErrnoMsgSet      _ANSI_ARGS_((char * (*) _ANSI_ARGS_((int))));
-char *	expErrnoMsg         _ANSI_ARGS_((int));
+char * expErrnoMsg    _ANSI_ARGS_((int));
 
 #ifdef NO_STDLIB_H
 #  include "../compat/stdlib.h"

@@ -1181,7 +1181,7 @@ Tcl_Interp *interp;
 			   version */
 
 			static int nextid = 0;
-			char *nextidstr = Tcl_GetVar2(interp,"tcl::history","nextid",0);
+			CONST char *nextidstr = Tcl_GetVar2(interp,"tcl::history","nextid",0);
 			if (nextidstr) {
 				sscanf(nextidstr,"%d",&nextid);
 			}
@@ -1298,11 +1298,10 @@ int immediate;		/* if true, stop immediately */
 {
 	if (!debugger_active) init_debugger(interp);
 
-	/* intuitively, it would seem natural to initialize the
-	debugger with the step command.  However, it's too late at
-	this point.  It must be done before the command reader
-	(whatever it is) has gotten control. */
-	/* debug_cmd = step;*/
+	/* Initialize debugger in single-step mode.  Note: if the
+	  command reader is already active, it's too late which is why
+	  we also statically initialize debug_cmd to step. */
+	debug_cmd = step;
 	step_count = 1;
 
 	if (immediate) {

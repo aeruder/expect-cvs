@@ -291,7 +291,7 @@ intMatch(esPtr,keymap,km_match,matchLen,skip,info)
 		int result;
 
 		re = Tcl_GetRegExpFromObj(NULL, km->keys,
-			TCL_REG_ADVANCED|TCL_REG_BOSONLY);
+			TCL_REG_ADVANCED|TCL_REG_BOSONLY|TCL_REG_CANMATCH);
 		flags = (offset > 0) ? TCL_REG_NOTBOL : 0;
 
 		result = Tcl_RegExpExecObj(NULL, re, esPtr->buffer, offset,
@@ -337,11 +337,12 @@ intMatch(esPtr,keymap,km_match,matchLen,skip,info)
 
 /* put regexp result in variables */
 static void
-intRegExpMatchProcess(interp,esPtr,km,info)
+intRegExpMatchProcess(interp,esPtr,km,info,offset)
      Tcl_Interp *interp;
      ExpState *esPtr;
      struct keymap *km;	/* ptr for above while parsing */
      Tcl_RegExpInfo *info;
+     int offset;
 {
     char name[20], value[20];
     int i;
@@ -350,9 +351,9 @@ intRegExpMatchProcess(interp,esPtr,km,info)
 	int start, end;
 	Tcl_Obj *val;
 
-	start = info->matches[i].start;
+	start = info->matches[i].start + offset;
 	if (start == -1) continue;
-	end = info->matches[i].end-1;
+	end = (info->matches[i].end-1) + offset;
 
 	if (km->indices) {
 	    /* start index */
@@ -888,6 +889,7 @@ Tcl_Obj *CONST objv[];		/* Argument objects. */
 		    }
 		    inp->i_list = exp_new_i_complex(interp,Tcl_GetString(*objv),
 			    EXP_TEMPORARY,inter_updateproc);
+		    if (!inp->i_list) return TCL_ERROR;
 		    break;
 		case EXP_SWITCH_OUTPUT: {
 		    struct output *tmp;
@@ -909,7 +911,7 @@ Tcl_Obj *CONST objv[];		/* Argument objects. */
 		    }
 		    outp->i_list = exp_new_i_complex(interp,Tcl_GetString(*objv),
 			    EXP_TEMPORARY,inter_updateproc);
-
+		    if (!outp->i_list) return TCL_ERROR;
 		    outp->action_eof = &action_eof;
 		    action_eof_ptr = &outp->action_eof;
 		    break;
@@ -1174,6 +1176,7 @@ Tcl_Obj *CONST objv[];		/* Argument objects. */
 	} else {
 	    o->i_list = exp_new_i_complex(interp,Tcl_GetString(chanName),
 		    EXP_TEMPORARY,inter_updateproc);
+	    if (!o->i_list) return TCL_ERROR;
 	}
 	o->next = 0;	/* no one else */
 	o->action_eof = &action_eof;
@@ -1199,9 +1202,11 @@ Tcl_Obj *CONST objv[];		/* Argument objects. */
 	input_user->i_list = exp_new_i_complex(interp,
 		Tcl_GetString(replace_user_by_process),
 		EXP_TEMPORARY,inter_updateproc);
+	if (!input_user->i_list) return TCL_ERROR;
 	input_default->output->i_list = exp_new_i_complex(interp,
 		Tcl_GetString(replace_user_by_process),
 		EXP_TEMPORARY,inter_updateproc);
+	if (!input_default->output->i_list) return TCL_ERROR;
     }
 
     /*
@@ -1225,6 +1230,7 @@ Tcl_Obj *CONST objv[];		/* Argument objects. */
 	    exp_free_i(interp,input_default->i_list,inter_updateproc);
 	    input_default->i_list = exp_new_i_complex(interp,Tcl_GetString(chanName),
 		    EXP_TEMPORARY,inter_updateproc);
+	    if (!input_default->i_list) return TCL_ERROR;
 	}
     }
 
@@ -1396,7 +1402,7 @@ Tcl_Obj *CONST objv[];		/* Argument objects. */
 	if (attempt_match) {
 	    rc = intMatch(u,inp->keymap,&km,&matchLen,&skip,&reInfo);
 	    if ((rc == EXP_MATCH) && km && km->re) {
-		intRegExpMatchProcess(interp,u,km,&reInfo);
+		intRegExpMatchProcess(interp,u,km,&reInfo,skip);
 	    }
 	} else {
 	    attempt_match = TRUE;
@@ -1668,7 +1674,7 @@ got_action:
 		if (attempt_match) {
 		    rc = intMatch(u,inp->keymap,&km,&matchLen,&skip,&reInfo);
 		    if ((rc == EXP_MATCH) && km && km->re) {
-			intRegExpMatchProcess(interp,u,km,&reInfo);
+			intRegExpMatchProcess(interp,u,km,&reInfo,skip);
 		    }
 		} else {
 		    attempt_match = TRUE;
@@ -1907,7 +1913,7 @@ got_action:
 		if (attempt_match) {
 		    rc = intMatch(u,inp->keymap,&km,&matchLen,&skip,&reInfo);
 		    if ((rc == EXP_MATCH) && km && km->re) {
-			intRegExpMatchProcess(interp,u,km,&reInfo);
+			intRegExpMatchProcess(interp,u,km,&reInfo,skip);
 		    }
 		} else {
 		    attempt_match = TRUE;

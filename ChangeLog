@@ -1,3 +1,186 @@
+2003-06-16  Andreas Kupries  <andreask@activestate.com>
+
+	* exp_command.c: Applied patch provided on c.l.t., by Don Libes
+	  <libes@nist.gov> in response to a bug report by Dirk Petera
+	  <dirkpetera@yahoo.com> in same place. See thread reference
+	  below:
+
+	  http://groups.google.ca/groups?threadm=4791f5a6.0305250619.1a660299%40posting.google.com
+
+2003-05-08  Andreas Kupries  <andreask@activestate.com>
+
+	* exp_clib.c (expectv): Applied patch provided on c.l.t., by Don
+	  Libes <libes@nist.gov> in response to a bug report by "Heath
+	  Moore" <hmoore@systran.com> in same place:
+
+	  > Regarding expect 5.38...
+	  >
+	  > I'm using libexpect on RedHat 8.0 to communicate via telnet,
+	  > and am having problems with it locking up instead of timing
+	  > out.  Causing traffic during the lockup breaks the lockup.  I
+	  > looked at the sources, and think I may have found the reason.
+	  >
+	  > It appears as though i_read can be called with remtime== 0,
+	  > which means do > one read() and return without using alarm(),
+	  > even when exp_timeout is non-zero.  This would happen if
+	  > i_read were to return after receiving non-matching data when
+	  > end_time == current_time.  The subsequent i_read would then
+	  > wait until it received data.
+
+2003-02-17  Andreas Kupries  <andreask@activestate.com>
+
+	* Makefile.in:
+	* configure.in: Removed the check of configure against
+	  configure.in and Makefile.in. It is a hassle to deal with when
+	  trying to build straight from CVS, making unsupervised automatic
+	  builds difficult
+
+2003-02-14  Andreas Kupries  <andreask@activestate.com>
+
+	* configure.in:   Made expect aware of tcl stubs. Derived from the
+	* exp_command.h:  patches to expect done by Steve Landers
+	* exp_command.c:  <stevel@digital-smarties.com>. Modifications:
+	* exp_main_sub.c  No global cmdinfo structures for 'close' and
+	* exp_main_exp.c: 'return'. Made this per-interpreter information
+	* exp_main_tk.c:  as it should be. Using interp assoc data for this.
+
+	NOTE: stubs is not default, but has to be activated via '--enable-stubs'.
+
+	* configure:      Regenerated.
+
+2003-02-14  Andreas Kupries  <andreask@activestate.com>
+
+	* exp_chan.c (exp_close_all): Save the nextPtr in a local variable
+	  before calling 'exp_close' as 'expStateFree' can be called from
+	  it under some circumstances, possibly causing the memory
+	  allocator to smash the value in 'esPtr'.
+
+2003-02-03  Andreas Kupries  <andreask@activestate.com>
+
+	* exp_log.c (expLogChannelOpen): Fixed the bug reported on
+	  comp.lang.tcl by Mordechai T. Abzug
+	  <morty@sanctuary.arbutus.md.us>. The bugfix itself was provided
+	  by Don Libes.
+
+2002-10-09  Andreas Kupries  <andreask@pliers.activestate.com>
+
+	* exp_command.c (Exp_SpawnCmd): Tcl_GetChannelHandle expected a
+	  ClientData*, but got an int*. sizeof(int) != sizeof(ClientData)
+	  on 64bit platforms. Crashed the command on a PA-RISC 2.0 machine
+	  with --enable-64bit set. Fix: Use temp. variables of type
+	  ClientData to retrieve the fd's, and copy this into the actual
+	  variables, with a cast to int.
+
+2002-09-25  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* configure: regen'ed
+	* configure.in: use tcl_libdir in EXP_LIB_SPEC instead of
+	${INSTALL_ROOT}${exec_prefix}/lib (steffen)
+
+	* exp_main_tk.c (Tk_Init2): don't call XSynchronize on OS X.
+
+2002-08-08  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+	
+	* Merged changes from the official version 5.38 of expect into the
+	  SF sources. See details below.
+
+	* Makefile.in: Added generation of MD5 checksum for distributed
+	  archive.
+	* rftp:         Bugfix by Curt Schroeder, see HISTORY
+	* HISTORY:      Updated with new info.
+	* configure:    Updated version info.
+	* configure.in: Updated version info.
+
+2002-06-26  David Gravereaux <davygrvy@pobox.com>
+
+	* example/weather: Updated script to use rainmaker.wunderground.com
+	instead of cirrus.sprl.umich.edu.  The old service is closed.
+	Added Larry Virden's notes about how rainmaker needs reverse DNS
+	from the peer making the connection or no data can retrieved.
+	This appears to be a blind error condition.
+
+2002-06-17  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	* exp_main_tk.c: #ifdef'd definition of "matherr". This hack is
+	  not required for 8.4 anymore. But still for 8.3.
+
+2002-03-25  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	* exp_main_sub.c: Fixed typo in merge of #459646. Thanks to Hemang Lavana.
+
+ 	* exp_log.c (expStdoutLogU): Merged fix for SF Bug #513382 into
+	  the HEAD (The source of the patch is "expect-sf418892-sf439042-branch").
+
+	  Use Tcl_WriteChars/Tcl_Flush instead of 'fwrite' for tcl 8.1 and
+	  beyond to enforce correct conversion of the internal UTF/8 into
+	  the external representation.
+
+	* Merged fix for SF Bug #459646 into the HEAD (The source of the
+	  patch is "expect-sf418892-sf439042-branch").
+
+	* Merged fix for SF Bug #439042 into the HEAD (The source of the
+	  patch is "expect-sf418892-sf439042-branch").
+
+	* Merged fix for SF Bug #418892 into the HEAD (The source of the
+	  patch is "expect-sf418892-sf439042-branch").
+
+2002-03-23  Don Libes  <libes@users.sourceforge.net>
+
+	* Andreas Kupries mods to provide CONST support per TIP 27 (Fixed
+	  SF Patch #525074).
+
+2002-02-25  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	* expect.c: Applied patch by Don Libes fixing improper
+	  internationalization.
+
+2002-02-21  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	* expect.man: Changed the paragraph about [exp_continue] to
+	  contain information about the flag "-continue_timer". This fixes
+	  the bug SF #520630.
+
+2002-02-08  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	* expect.man: Changed abbreviation of "-notransfer" from "-n" to
+	  "-not". "-n" is no longer unique due to the addition of
+	  "-nocase". This fixes the bug SF #514994.
+
+2002-02-07  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	* Applied patch for SF #514590 to correct behaviour of expect when
+	  expecting and send from and to bogus spawn id's.
+
+2002-01-16  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	* Resynchronization of SourceForge with Don's sources to Expect
+	  version 5.34. The changes are
+
+	  Don Porter <don.porter@nist.gov> provided package-related fixes
+	  for test suite.
+
+	  Brian Theado <brian.theado@usa.net> noted that interact's -re
+	  support broke when offsets kicked in.  Turned out that the
+	  regexp engine supports them during execution but the results are
+	  delivered RELATIVE to the offset.  (I suspect this was done
+	  due to expediency.)
+
+2001-12-05  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	* exp_inter.c: Applied patch posted by Don libes to c.l.t. on his
+	  behalf to keep the SF repository in sync with his changes. Don's
+	  notes: I obviously missed the fact that although
+	  "Tcl_RegExpExecObj" supports offsets, they aren't delivered to
+	  "Tcl_RegExpGetInfo".
+
+2001-09-12  David Gravereaux <davygrvy@pobox.com>
+
+	* 'telco-tec-win32-branch' branch created.
+
+2001-08-01  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* Dbg.c (Dbg_On): fixed handling of stepping. [Bug: #446412]
+
 2000-04-26  Rob Savoye  <rob@welcomehome.org>
 
 	* pty_termios.h: Only include stropts.h if it exists, rather than

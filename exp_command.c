@@ -215,7 +215,7 @@ expStateFromChannelName(interp,name,open,adjust,any,msg)
 {
     ExpState *esPtr;
     Tcl_Channel channel;
-    char *chanName;
+    CONST char *chanName;
 
     if (any) {
 	if (0 == strcmp(name,EXP_SPAWN_ID_ANY_LIT)) {
@@ -581,7 +581,7 @@ char **argv;
     char *chanName = 0;
     int leaveopen = FALSE;
     int rc, wc;
-    char *stty_init;
+    CONST char *stty_init;
     int slave_write_ioctls = 1;
 		/* by default, slave will be write-ioctled this many times */
     int slave_opens = 3;
@@ -781,6 +781,7 @@ when trapping, see below in child half of fork */
 	 */
 	int mode;
 	int rfd, wfd;
+	ClientData rfdc, wfdc;
 	
 	if (echo) {
 	    expStdoutLogU(argv0,0);
@@ -789,19 +790,22 @@ when trapping, see below in child half of fork */
 	if (!(channel = Tcl_GetChannel(interp,chanName,&mode))) {
 	    return TCL_ERROR;
 	}
+
 	if (!mode) {
 	    exp_error(interp,"channel is neither readable nor writable");
 	    return TCL_ERROR;
 	}
 	if (mode & TCL_READABLE) {
-	    if (TCL_ERROR == Tcl_GetChannelHandle(channel, TCL_READABLE, (ClientData) &rfd)) {
+	    if (TCL_ERROR == Tcl_GetChannelHandle(channel, TCL_READABLE, (ClientData*) &rfdc)) {
 		return TCL_ERROR;
 	    }
+	    rfd = (int) rfdc;
 	}
 	if (mode & TCL_WRITABLE) {
-	    if (TCL_ERROR == Tcl_GetChannelHandle(channel, TCL_WRITABLE, (ClientData) &wfd)) {
+	    if (TCL_ERROR == Tcl_GetChannelHandle(channel, TCL_WRITABLE, (ClientData*) &wfdc)) {
 		return TCL_ERROR;
-	    }    
+	    }
+	    wfd = (int) wfdc;
 	}
 	master = ((mode & TCL_READABLE)?rfd:wfd);
 
@@ -1312,7 +1316,7 @@ Tcl_Interp *interp;
 struct slow_arg *x;
 {
 	int sc;		/* return from scanf */
-	char *s = exp_get_var(interp,"send_slow");
+	CONST char *s = exp_get_var(interp,"send_slow");
 	if (!s) {
 		exp_error(interp,"send -s: send_slow has no value");
 		return(-1);
@@ -1343,13 +1347,25 @@ struct slow_arg *arg;
 {
 	int rc;
 
+	char *p = buffer;
 	while (rembytes > 0) {
-		int len;
+		int bytelen;
+		int charlen;
+		char *p;
+		int i;
 		
-		len = (arg->size<rembytes?arg->size:rembytes);
-		if (0 > exact_write(esPtr,buffer,len)) return(-1);
-		rembytes -= arg->size;
-		buffer += arg->size;
+		p = buffer;
+		charlen = (arg->size<rembytes?arg->size:rembytes);
+
+		/* count out the right number of UTF8 chars */
+		for (i=0;i<charlen;i++) {
+		  p = Tcl_UtfNext(p);
+		}
+		bytelen = p-buffer;
+
+		if (0 > exact_write(esPtr,buffer,bytelen)) return(-1);
+		rembytes -= bytelen;
+		buffer += bytelen;
 
 		/* skip sleep after last write */
 		if (rembytes > 0) {
@@ -1374,7 +1390,7 @@ Tcl_Interp *interp;
 struct human_arg *x;
 {
 	int sc;		/* return from scanf */
-	char *s = exp_get_var(interp,"send_human");
+	CONST char *s = exp_get_var(interp,"send_human");
 
 	if (!s) {
 		exp_error(interp,"send -h: send_human has no value");
@@ -1606,7 +1622,8 @@ Tcl_VarTraceProc *updateproc;	/* proc to invoke if indirect is written */
 }
 
 /* generate a descriptor for a "-i" flag */
-/* cannot fail */
+/* can only fail on bad direct descriptors */
+/* indirect descriptors always succeed */
 struct exp_i *
 exp_new_i_complex(interp,arg,duration,updateproc)
 Tcl_Interp *interp;
@@ -1620,7 +1637,7 @@ Tcl_VarTraceProc *updateproc;	/* proc to invoke if indirect is written */
 
 	i = exp_new_i();
 
-	i->direct = (isExpChannelName(arg)?EXP_DIRECT:EXP_INDIRECT);
+	i->direct = (isExpChannelName(arg) || (0 == strcmp(arg, EXP_SPAWN_ID_ANY_LIT))?EXP_DIRECT:EXP_INDIRECT);
 #if OBSOLETE
 	i->direct = (isdigit(arg[0]) || (arg[0] == '-'))?EXP_DIRECT:EXP_INDIRECT;
 #endif
@@ -1639,7 +1656,10 @@ Tcl_VarTraceProc *updateproc;	/* proc to invoke if indirect is written */
 	}
 
 	i->state_list = 0;
-	exp_i_update(interp,i);
+	if (TCL_ERROR == exp_i_update(interp,i)) {
+	  exp_free_i(interp,i,(Tcl_VarTraceProc *)0);
+	  return 0;
+	}
 
 	/* if indirect, ask Tcl to tell us when variable is modified */
 
@@ -1665,7 +1685,9 @@ ExpState *esPtr;
 }
 
 /* this routine assumes i->esPtr is meaningful */
-static void
+/* returns TCL_ERROR only on direct */
+/* indirects always succeed */
+static int
 exp_i_parse_states(interp,i) /* INTL */
 Tcl_Interp *interp;
 struct exp_i *i;
@@ -1679,20 +1701,22 @@ struct exp_i *i;
     if (Tcl_SplitList(NULL, p, &argc, &argv) != TCL_OK) goto error;
 
     for (j = 0; j < argc; j++) {
-        esPtr = expStateFromChannelName(interp,argv[j],1,0,0,"");
+        esPtr = expStateFromChannelName(interp,argv[j],1,0,1,"");
 	if (!esPtr) goto error;
 	exp_i_add_state(i,esPtr);
     }
     ckfree((char*)argv);
-    return;
+    return TCL_OK;
 error:
     expDiagLogU("exp_i_parse_states: ");
     expDiagLogU(Tcl_GetStringResult(interp));
-    return;
+    return TCL_ERROR;
 }
 	
 /* updates a single exp_i struct */
-void
+/* return TCL_ERROR only on direct variables */
+/* indirect variables always succeed */
+int
 exp_i_update(interp,i)
 Tcl_Interp *interp;
 struct exp_i *i;
@@ -1708,7 +1732,7 @@ struct exp_i *i;
     }
     
     if (i->value) {
-      if (streq(p,i->value)) return;
+      if (streq(p,i->value)) return TCL_OK;
       
       /* replace new value with old */
       ckfree(i->value);
@@ -1723,8 +1747,7 @@ struct exp_i *i;
     /* "direct" i's once */
     i->state_list = 0;
   }
-  exp_i_parse_states(interp, i);
-  return;
+  return exp_i_parse_states(interp, i);
 }
 
 struct exp_i *
@@ -1896,6 +1919,7 @@ getString:
 	i = exp_new_i_simple(esPtr,EXP_TEMPORARY);
     } else {
 	i = exp_new_i_complex(interp,chanName,FALSE,(Tcl_VarTraceProc *)0);
+	if (!i) return TCL_ERROR;
     }
 
 #define send_to_stderr	(clientData == &sendCD_error)
@@ -2234,6 +2258,13 @@ char **argv;
 		}
 	}
 
+	/*
+	 * Restore previous definition of close.  Needed when expect is
+	 * dynamically loaded after close has been redefined
+	 * e.g.  the virtual file system in tclkit
+	 */
+	Tcl_Eval(interp, "rename _close.pre_expect close");
+
 	Tcl_Exit(value);
 	/*NOTREACHED*/
 }
@@ -2284,12 +2315,12 @@ Tcl_Obj *CONST objv[];	/* Argument objects. */
 	/* Historical note: we used "close"  long before there was a */
 	/* Tcl builtin by the same name. */
 
-	Tcl_CmdInfo info;
+        Tcl_CmdInfo* close_info;
+
 	Tcl_ResetResult(interp);
-	if (0 == Tcl_GetCommandInfo(interp,"close",&info)) {
-	    info.clientData = 0;
-	}
-	return(Tcl_CloseObjCmd(info.clientData,interp,objc_orig,objv_orig));
+
+	close_info = (Tcl_CmdInfo*) Tcl_GetAssocData (interp, EXP_CMDINFO_CLOSE, NULL);
+	return(close_info->objProc(close_info->objClientData,interp,objc_orig,objv_orig));
     }
 
     if (chanName) {
@@ -2934,7 +2965,9 @@ Tcl_Obj *CONST objv[];
     /* if successful (i.e., TCL_RETURN is returned) */
     /* modify the result, so that we will handle it specially */
 
-    int result = Tcl_ReturnObjCmd(clientData,interp,objc,objv);
+    Tcl_CmdInfo* return_info = (Tcl_CmdInfo*) Tcl_GetAssocData (interp, EXP_CMDINFO_RETURN, NULL);
+
+    int result = return_info->objProc(return_info->objClientData,interp,objc,objv);
     if (result == TCL_RETURN)
         result = EXP_TCL_RETURN;
     return result;
