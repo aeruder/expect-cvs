@@ -112,10 +112,13 @@
 #ifndef TCL_EXTERN
 #   undef DLLIMPORT
 #   undef DLLEXPORT
-#   if defined(__WIN32__) && (defined(_MSC_VER) || (defined(__GNUC__) && defined(__declspec))) || (defined(MAC_TCL) && FUNCTION_DECLSPEC)
+#   if (defined(__WIN32__) &&  (defined(_MSC_VER) || (__BORLANDC__ >= 0x0550) || \
+	    (defined(__GNUC__) && defined(__DECLSPEC_SUPPORTED)))) || \
+	    (defined(MAC_TCL) && FUNCTION_DECLSPEC)
 #	define DLLIMPORT __declspec(dllimport)
 #	define DLLEXPORT __declspec(dllexport)
 #   elif defined(__BORLANDC__)
+#	define OLD_BORLAND 1
 #	define DLLIMPORT __import
 #	define DLLEXPORT __export
 #   else
@@ -132,9 +135,9 @@
 #	define TCL_CPP
 #   endif
     /*
-     * Borland requires the attributes be placed after the return type.
+     * Pre 5.5 Borland requires the attributes be placed after the return type.
      */
-#   ifdef __BORLANDC__
+#   if OLD_BORLAND
 #	define TCL_EXTERN(rtnType) extern TCL_CPP rtnType TCL_STORAGE_CLASS
 #   else
 #	define TCL_EXTERN(rtnType) extern TCL_CPP TCL_STORAGE_CLASS rtnType
