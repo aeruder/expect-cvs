@@ -714,7 +714,7 @@ ConsoleDebugger::OnWriteConsoleW(Process *proc, ThreadInfo *threadInfo,
 
     // Convert to ASCII and write the intercepted data to the pipe.
     //
-    w = WideCharToMultiByte(CP_ACP, 0, p, n, a, asize, NULL, NULL);
+    w = WideCharToMultiByte(CP_ACP, 0, p, n, a, asize, 0L, 0L);
 //    bRet = ExpWriteMaster(UseSocket, HMaster, a, w, &proc->overlapped);
 
     if (p != buf) {
@@ -1023,7 +1023,7 @@ ConsoleDebugger::OnWriteConsoleOutputCharacterW(Process *proc,
 //    ResetEvent(proc->overlapped.hEvent);
 
     // Convert to ASCI and Write the intercepted data to the pipe.
-    w = WideCharToMultiByte(CP_ACP, 0, p, n, a, asize, NULL, NULL);
+    w = WideCharToMultiByte(CP_ACP, 0, p, n, a, asize, 0L, 0L);
 //    b = ExpWriteMaster(UseSocket, HMaster, a, w, &proc->overlapped);
 
     if (p != buf) {
