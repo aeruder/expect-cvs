@@ -1,8 +1,8 @@
 /* ----------------------------------------------------------------------------
  * expWinMessage.cpp --
  *
- *	Defines the Message class.  This is what is passed over the thread-safe
- *	event queue.
+ *	Defines the Message class.  This is what is passed over the
+ *	thread-safe event queue.
  *
  * ----------------------------------------------------------------------------
  *

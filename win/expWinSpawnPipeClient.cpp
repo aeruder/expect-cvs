@@ -6,11 +6,11 @@
  * ----------------------------------------------------------------------------
  *
  * Written by: Don Libes, libes@cme.nist.gov, NIST, 12/3/90
- * 
+ *
  * Design and implementation of this program was paid for by U.S. tax
  * dollars.  Therefore it is public domain.  However, the author and NIST
  * would appreciate credit if this program or parts of it are used.
- * 
+ *
  * Copyright (c) 1997 Mitel Corporation
  *	work by Gordon Chaffee <chaffee@bmrc.berkeley.edu> for the WinNT port.
  *
@@ -28,12 +28,23 @@
 
 #include "expWinInt.h"
 
+class ReadPipe : public CMclThreadHandler
+{
+public:
+    ReadPipe(CMclQueue<Message> &_mQ);
+private:
+    virtual unsigned ThreadHandlerProc(void);
+    CMclQueue<Message> &mQ;
+    HANDLE hStdIn;
+};
+
+
 SpawnPipeClient::SpawnPipeClient(const char *name, CMclQueue<Message> &_mQ)
     : mQ(_mQ)
 {
-    hStdIn  = GetStdHandle(STD_INPUT_HANDLE);
     hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     hStdErr = GetStdHandle(STD_ERROR_HANDLE);
+    new CMclThread(new ReadPipe(_mQ));	    // <- fix this!  save `em somewhere.
 }
 
 void
@@ -50,4 +61,37 @@ SpawnPipeClient::Write(Message &what)
     }
 
     WriteFile(where, what.bytes, what.length, &dwWritten, 0L);
+}
+
+ReadPipe::ReadPipe(CMclQueue<Message> &_mQ)
+    : mQ(_mQ)
+{
+    hStdIn  = GetStdHandle(STD_INPUT_HANDLE);
+}
+
+#define READ_BUFFER_SIZE    128
+
+unsigned ReadPipe::ThreadHandlerProc(void)
+{
+    BOOL ok;
+    DWORD dwRead;
+    Message &msg = Message();
+    BYTE *readBuf;
+
+again:
+    readBuf = new BYTE [READ_BUFFER_SIZE];
+    ok = ReadFile(hStdIn, readBuf, READ_BUFFER_SIZE, &dwRead, 0L);
+    if (!ok || dwRead == 0) {
+	CloseHandle(hStdIn);  // <- should this be here?
+	delete [] readBuf;
+	goto done;
+    }
+    msg.bytes = readBuf;
+    msg.length = dwRead;
+    msg.type = Message::TYPE_INSTREAM;
+    mQ.Put(msg);
+    goto again;
+
+done:
+    return 0;
 }
