@@ -26,9 +26,7 @@
  * ----------------------------------------------------------------------------
  */
 
-//#include "expWinInt.h"
-#include "tclPort.h"
-#include "expWin.h"
+#include "expWinInt.h"
 
 void
 ExpDynloadTclStubs (void)

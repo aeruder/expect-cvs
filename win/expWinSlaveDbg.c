@@ -58,10 +58,7 @@
  * RCS: @(#) $Id$
  * ----------------------------------------------------------------------------
  */
-#include "tclInt.h"
-#include "tclPort.h"
-#include "expWin.h"
-#include "expWinSlave.h"
+#include "expWinInt.h"
 
 #include <imagehlp.h>
 #ifdef _MSC_VER
