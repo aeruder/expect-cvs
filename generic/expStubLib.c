@@ -75,7 +75,7 @@ Exp_InitStubs (interp, version, exact)
 	return NULL;
     }
 
-    if (itclStubsPtr->hooks) {
+    if (expStubsPtr->hooks) {
 	expIntStubsPtr = expStubsPtr->hooks->expIntStubs;
 	expPlatStubsPtr = expStubsPtr->hooks->expPlatStubs;
 	expIntPlatStubsPtr = expStubsPtr->hooks->expIntPlatStubs;
