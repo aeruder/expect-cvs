@@ -113,8 +113,10 @@ TCLSH_PROG	= "$(TCLROOT)\win\$(TMPDIRNAMEPREFIX)\tclsh$(TCLMAJOR)$(TCLMINOR)$(DB
 
 !if $(ISTCLINSTALL)
 TCL_INCLUDES	= -I"$(TCLROOT)\include"
+TCL_INTINCLUDES	= -I"$(TCLROOT)\include"
 !else
 TCL_INCLUDES	= -I"$(TCLROOT)\generic"
+TCL_INTINCLUDES	= -I"$(TCLROOT)\generic" -I"$(TCLROOT)\win"
 !endif
 
 #==============================================
