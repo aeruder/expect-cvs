@@ -45,7 +45,7 @@
 #   define TCL_STORAGE_CLASS
 extern TCL_CPP void ExpInitWinProcessAPI (void);
 extern TCL_CPP void ExpDynloadTclStubs (void);
-#   include "expWinSlave.h"
+#   include "expWinSlave.hpp"
 #   include "spawndrvmc.h"
 #elif defined(BUILD_exp)
 #   define TCL_STORAGE_CLASS DLLEXPORT

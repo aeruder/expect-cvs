@@ -72,15 +72,9 @@ ExpWinProcs *expWinProcs = &asciiProcs;
 void
 ExpWinInit (void)
 {
-    OSVERSIONINFO os;
-    os.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-    
-    if (GetVersionEx(&os) != 0) {    
-	switch (os.dwPlatformId) {
-	    case VER_PLATFORM_WIN32_WINDOWS:
-		expWinProcs = &asciiProcs; break;
-	    case VER_PLATFORM_WIN32_NT:
-		expWinProcs = &unicodeProcs; break;
-	}
+    if (TclWinGetPlatformId() == VER_PLATFORM_WIN32_NT) {    
+	expWinProcs = &unicodeProcs;
+    } else {
+	expWinProcs = &asciiProcs;
     }
 }
