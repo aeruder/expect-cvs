@@ -309,6 +309,7 @@ ConsoleDebugger::CommonDebugger()
     DEBUG_EVENT debEvent;	// debugging event info.
     DWORD dwContinueStatus;	// exception continuation.
     Process *proc;
+    int breakCount = 0;
 
 again:
     dwContinueStatus = DBG_CONTINUE;
@@ -351,7 +352,8 @@ again:
 	switch (debEvent.u.Exception.ExceptionRecord.ExceptionCode) {
 	case EXCEPTION_BREAKPOINT:
 	{
-	    switch (proc->nBreakCount < 4 ? ++(proc->nBreakCount) : 4) {
+	    // only the first three get special attention.
+	    switch (breakCount < 4 ? ++breakCount : 4) {
 	    case 1:
 		OnXFirstBreakpoint(proc, &debEvent); break;
 	    case 2:
@@ -766,7 +768,8 @@ ConsoleDebugger::OnXSecondChanceException(Process *proc,
     {
 	DWORD len;
 	CHAR *buffer = new CHAR [MAX_PATH+54];
-	len = wsprintf(buffer, "A fatal exception has occured in \"%s\"\n"
+	len = wsprintf(buffer,
+		"\nA fatal exception has occured in \"%s\"\n"
 		"This is the backtrace\n"
 		"-------------------------------------\n", s);
 	WriteMasterError(buffer, len);

@@ -192,7 +192,8 @@ DoEvents(ClientTransport *transport, SlaveTrap *slave,
 	    break;
 
 	case Message::TYPE_SLAVEDONE:
-	    delete slave, transport;
+	    delete slave;
+	    delete transport;
 	    return 0;
 	}
     }

@@ -31,6 +31,7 @@
 
 class SlaveTrap {
 public:
+    virtual ~SlaveTrap() {};
     virtual void Write(Message *) = 0;
 };
 
@@ -38,7 +39,7 @@ public:
 class SlaveTrapDbg : public SlaveTrap {
 public:
     SlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message *> &_mQ);
-    ~SlaveTrapDbg();
+    virtual ~SlaveTrapDbg();
     virtual void Write(Message *);
 
 private:

@@ -32,6 +32,7 @@
 class ClientTransport
 {
 public:
+    virtual ~ClientTransport() {};
     virtual void Write(Message *) = 0;
 };
 
@@ -62,8 +63,7 @@ public:
     virtual void Write(Message *);
 private:
     CMclQueue<Message *> &mQ;
-    HANDLE ConOut;
-    HANDLE oldBuffer;
+    HANDLE ConOut, ConIn, oldBuffer;
     ReadCon *reader;
     CMclEvent Stop;
     CMclThread *readThread;
