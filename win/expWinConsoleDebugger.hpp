@@ -42,6 +42,7 @@ class ConsoleDebugger : public CMclThreadHandler, ArgMaker
 public:
     ConsoleDebugger(int _argc, char * const *_argv, CMclQueue<Message *> &_mQ);
     ~ConsoleDebugger();
+    void Write (Message *);
 
 private:
     virtual unsigned ThreadHandlerProc(void);
@@ -147,8 +148,12 @@ private:
             instr_PUSH(0x68), instr_MOV_EAX(0xB8),
             instr_CALL_EAX(0xD0FF), instr_INT_3(0xCC)
 	{
-		// D:\\expect_wslive\\expect_win32_take2\\win\\Release\\ ....
-	    strcpy(data_DllName, "injector.dll");
+		// Just a temporary hack.. just ignore for now.
+#	ifdef _DEBUG
+	    strcpy(data_DllName, "D:\\expect_wslive\\expect_win32_take2\\win\\Debug\\injector.dll");
+#	else
+	    strcpy(data_DllName, "D:\\expect_wslive\\expect_win32_take2\\win\\Release\\injector.dll");
+#	endif
 	}
     };
 #   else
@@ -273,6 +278,8 @@ private:
 
     PFNVIRTUALALLOCEX pfnVirtualAllocEx;
     PFNVIRTUALFREEEX pfnVirtualFreeEx;
+
+    CMclMailbox *injectorIPC;
 };
 
 #endif // INC_expWinConsoleDebugger_hpp__
