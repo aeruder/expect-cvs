@@ -1794,7 +1794,7 @@ Tcl_ErrnoMsg(err)
 #ifdef ENXIO
 	case ENXIO: return "no such device or address";
 #endif
-#ifdef EOPNOTSUPP
+#if defined(EOPNOTSUPP) &&  (!defined(ENOTSUP) || (ENOTSUP != EOPNOTSUPP))
 	case EOPNOTSUPP: return "operation not supported on socket";
 #endif
 #ifdef EPERM
