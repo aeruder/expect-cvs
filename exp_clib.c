@@ -117,6 +117,7 @@ extern unsigned long	strtoul _ANSI_ARGS_((CONST char *string,
 #endif
 
 #include "expect.h"
+static void TclRegError _ANSI_ARGS_((char *));
 
 /*
  * regexp code - from tcl8.0.4/generic/regexp.c
@@ -1445,6 +1446,7 @@ char *s2;
  *----------------------------------------------------------------------
  */
 
+static
 void
 TclRegError(string)
     char *string;			/* Error message. */
@@ -1489,10 +1491,7 @@ TclGetRegError()
  *----------------------------------------------------------------------
  */
 
-/* this must not be static because other parts of the Expect package
- * that we drag in refer to this - actually they refer to the one in the
- * Tcl library, but this suffices to pacify them.
- */
+static
 char *
 Tcl_ErrnoMsg(err)
     int err;			/* Error number (such as in errno variable). */
@@ -2308,6 +2307,7 @@ char *argv[];	/* some compiler complains about **argv? */
 		exp_init_pty();
 		exp_init_tty();
 		expDiagLogPtrSet(expDiagLogU);
+		expErrnoMsgSet(Tcl_ErrnoMsg);
 	}
 
 	if (!file || !argv) sysreturn(EINVAL);
