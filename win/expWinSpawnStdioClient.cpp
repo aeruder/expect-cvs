@@ -1,7 +1,7 @@
 /* ----------------------------------------------------------------------------
- * expWinSpawnPipeClient.cpp --
+ * expWinSpawnStdioClient.cpp --
  *
- *	Simple pipes as our IPC mechanism.
+ *	Simple standard IO as our IPC mechanism.
  *
  * ----------------------------------------------------------------------------
  *
@@ -39,7 +39,7 @@ private:
 };
 
 
-SpawnPipeClient::SpawnPipeClient(const char *name, CMclQueue<Message *> &_mQ)
+SpawnStdioClient::SpawnStdioClient(const char *name, CMclQueue<Message *> &_mQ)
     : mQ(_mQ)
 {
     hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -48,7 +48,7 @@ SpawnPipeClient::SpawnPipeClient(const char *name, CMclQueue<Message *> &_mQ)
 }
 
 void
-SpawnPipeClient::Write(Message *what)
+SpawnStdioClient::Write(Message *what)
 {
     DWORD dwWritten;
     HANDLE where;
