@@ -34,9 +34,7 @@
  * ----------------------------------------------------------------------------
  */
 
-extern "C" {
-    #include "expWinInt.h"
-}
+#include "expWinInt.h"
 
 #include <atlbase.h>
 extern CComModule _Module;

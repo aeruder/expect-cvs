@@ -36,7 +36,7 @@
 
 #include <windows.h>
 
-extern CHAR *	MsvcDbg_GetCommandLine(void);
-extern int	MsvcDbg_Launch(const CHAR *wrkspace, Tcl_DString *cmdline,
+extern TCL_CPP CHAR *	MsvcDbg_GetCommandLine(void);
+extern TCL_CPP int	MsvcDbg_Launch(const CHAR *wrkspace, Tcl_DString *cmdline,
 			void **token);
 #endif

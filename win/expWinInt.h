@@ -124,7 +124,7 @@ typedef struct {
 	    DWORD);
 } ExpWinProcs;
 
-extern ExpWinProcs *expWinProcs;
+extern TCL_CPP ExpWinProcs *expWinProcs;
 
 
 #include "expIntPlatDecls.h"
