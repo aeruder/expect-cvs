@@ -103,7 +103,7 @@ dnl AC_TIME_WITH_SYS_TIME
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT
 
-EXP_CFLAGS=-g
+EXP_CFLAGS="-g $TCL_EXTRA_CFLAGS"
 case "${host}" in
  # Use -g on all systems but Linux where it upsets the dynamic X libraries.
   i[[3456]]86-*-linux*)	EXP_CFLAGS="" ;;
@@ -1050,12 +1050,18 @@ fi
 
 EXP_BUILD_LIB_SPEC="-L`pwd` -lexpect${EXP_LIB_VERSION}"
 EXP_LIB_SPEC="-L\${exec_prefix}/lib -lexpect${EXP_LIB_VERSION}"
-EXP_UNSHARED_LIB_FILE=libexpect${EXP_LIB_VERSION}.a
+EXP_UNSHARED_LIB_FILE=libexpect${EXP_LIB_VERSION}${TCL_DBGX}.a
+
+# The TCL_SHARED_LIB_SUFFIX macro below relies on the DBGX macro.
+# This needs to be set to the value of TCL_DBGX so the correct value
+# propagated correctly.
+
+DBGX=$TCL_DBGX
 
 AC_MSG_CHECKING([for type of library to build])
 if test "$enable_shared" = "yes" && test "x${TCL_SHLIB_SUFFIX}" != "x" ; then
   EXP_SHLIB_CFLAGS=$TCL_SHLIB_CFLAGS
-#  EXP_SHARED_LIB_FILE=libexpect$EXP_LIB_VERSION$TCL_SHLIB_SUFFIX
+#  EXP_SHARED_LIB_FILE=libexpect$EXP_LIB_VERSION$TCL_DBGX$TCL_SHLIB_SUFFIX
   eval "EXP_SHARED_LIB_FILE=libexpect${TCL_SHARED_LIB_SUFFIX}"
   EXP_LIB_FILE=$EXP_SHARED_LIB_FILE
   EXP_LIB_FILES="$EXP_SHARED_LIB_FILE $EXP_UNSHARED_LIB_FILE"
@@ -1079,7 +1085,7 @@ EXP_AND_TK_LIBS="$EXP_AND_TK_LIBS $TCL_LD_SEARCH_FLAGS"
 # do test ourselves.  Ugh.  
 #
 if test "x$TCL_SHLIB_LD_LIBS" = "x" ; then
-	EXP_SHLIB_LD_LIBS=""
+	EXP_SHLIB_LD_LIBS="$LIBS"
 else
 	# seems a little strange to build in Tcl's build-lib, but
 	# that's what Tk does.
