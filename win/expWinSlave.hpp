@@ -119,6 +119,11 @@ extern TCL_CPP void ExpDynloadTclStubs (void);
 #ifdef __cplusplus
 #include "./Mcl/include/CMcl.h"
 
+class Message
+{
+    char *lala;
+};
+
 class ExpSpawnClientTransport
 {
 public:
@@ -152,17 +157,15 @@ class ExpSlaveTrap {
 };
 class ExpSlaveTrapPipe : public ExpSlaveTrap {
 public:
-    ExpSlaveTrapPipe(int argc, char * const argv[]);
+    ExpSlaveTrapPipe(int argc, char * const argv[], CMclQueue<Message> &mQ);
 };
 
 class ExpSlaveTrapDbg : public ExpSlaveTrap {
 public:
-    ExpSlaveTrapDbg(int argc, char * const argv[]);
+    ExpSlaveTrapDbg(int argc, char * const argv[], CMclQueue<Message> &mQ);
 private:
     CMclThreadAutoPtr debuggerThread;
 };
-
-extern int ExpWinSlaveDoEvents(ExpSpawnClientTransport *transport, ExpSlaveTrap *trap);
 #endif /* __cplusplus */
 
 #endif /* _EXPWINSLAVE_HPP */
