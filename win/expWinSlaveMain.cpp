@@ -76,7 +76,7 @@ main (void)
     SetArgv(&argc, &argv);
 
     if (argc < 4) {
-	return 3;
+	EXP_LOG0(MSG_IO_ARGSWRONG);
     }
 
     //  Open the client side of our IPC transport that connects us back
