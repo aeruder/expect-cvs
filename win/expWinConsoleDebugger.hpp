@@ -152,7 +152,7 @@ private:
 #	ifdef _DEBUG
 	    strcpy(data_DllName, "D:\\expect_wslive\\expect_win32_take2\\win\\Debug\\injector.dll");
 #	else
-	    strcpy(data_DllName, "D:\\expect_wslive\\expect_win32_take2\\win\\Release\\injector.dll");
+	    strcpy(data_DllName, "injector.dll");
 #	endif
 	}
     };

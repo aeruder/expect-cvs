@@ -196,7 +196,6 @@ DoEvents(ClientTransport *transport, SlaveTrap *slave,
 	    return 0;
 	}
     }
-    //delete transport, slaveCtrl;
     return 0;
 }
 

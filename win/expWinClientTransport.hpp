@@ -38,6 +38,7 @@ public:
 
 // Forward reference.
 class ReadPipe;
+class ReadCon;
 
 class ClientStdio : public ClientTransport
 {
@@ -61,8 +62,9 @@ public:
     virtual void Write(Message *);
 private:
     CMclQueue<Message *> &mQ;
-    HANDLE hConOut;
-    HANDLE hConIn;
-    HANDLE hOriginalConOut;
+    HANDLE ConOut;
+    HANDLE oldBuffer;
+    ReadCon *reader;
+    CMclEvent Stop;
     CMclThread *readThread;
 };

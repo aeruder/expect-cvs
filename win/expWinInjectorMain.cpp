@@ -48,8 +48,8 @@ private:
 
     virtual unsigned ThreadHandlerProc(void)
     {
-	CHAR	boxName[50];
-	DWORD	err, dwWritten;
+	CHAR boxName[50];
+	DWORD err, dwWritten;
 	INPUT_RECORD ir;
 
 	wsprintf(boxName, "ExpectInjector_pid%d", GetCurrentProcessId());
