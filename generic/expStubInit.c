@@ -91,8 +91,8 @@ ExpIntPlatStubs expIntPlatStubs = {
 #ifdef __WIN32__
     ExpWinApplicationType, /* 0 */
     ExpWinCreateProcess, /* 1 */
-    ExpSyslog, /* 2 */
-    NULL, /* 3 */
+    ExpWinSyslog, /* 2 */
+    ExpSyslogGetSysMsg, /* 3 */
     Exp_WaitPid, /* 4 */
     Exp_KillProcess, /* 5 */
     ExpWinInit, /* 6 */

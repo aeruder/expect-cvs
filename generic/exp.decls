@@ -494,11 +494,11 @@ declare 1 win {
 	PDWORD globalPidPtr)
 }
 declare 2 win {
-    void ExpSyslog (char *fmt, ...)
+    void ExpWinSyslog (DWORD errId, ...)
 }
-#declare 3 win {
-#    char *ExpSyslogGetSysMsg (DWORD errId)
-#}
+declare 3 win {
+    char *ExpSyslogGetSysMsg (DWORD errId)
+}
 declare 4 win {
     Tcl_Pid Exp_WaitPid (Tcl_Pid pid, int *statPtr, int options)
 }
