@@ -2454,6 +2454,8 @@ when trapping, see below in child half of fork */
 
 	close(sync_fds[0]);
 	close(sync2_fds[1]);
+	close(status_pipe[0]);
+	fcntl(status_pipe[1],F_SETFD,1);	/* close on exec */
 
 #ifdef CRAY
 	(void) close(exp_pty[0]);
