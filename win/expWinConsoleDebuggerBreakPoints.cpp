@@ -3,7 +3,7 @@
  *
  *	Breakpoints for the ConsoleDebugger class are in here.  These define
  *	the behavior of what to do when a breakpoint happens in the slave
- *	we are intercepting.  From here, we transfer the stream .... (TBD)
+ *	we are intercepting.  From here, we transfer the stream .... (TBF)
  *
  * ----------------------------------------------------------------------------
  *
@@ -29,6 +29,10 @@
  */
 
 #include "expWinConsoleDebugger.hpp"
+
+
+//  NOTE:  black magic abounds...  be warry young padwon...
+
 
 /*
  *----------------------------------------------------------------------
@@ -103,7 +107,7 @@ ConsoleDebugger::OnBeep(Process *proc, ThreadInfo *threadInfo,
 {
     CHAR buf[50];
 
-    //LOG_ENTRY("Beep");
+//    LOG_ENTRY("Beep");
 
     if (direction == BREAK_IN) {
 	/* Modify the arguments so a beep doesn't sound on the server */
@@ -111,7 +115,7 @@ ConsoleDebugger::OnBeep(Process *proc, ThreadInfo *threadInfo,
     } else if (direction == BREAK_OUT) {
 	if (*returnValue == 0) {
 	    buf[0] = 7; /* ASCII beep */
-	    //ExpWriteMaster(UseSocket, HMaster, buf, 1, &proc->overlapped);
+//	    ExpWriteMaster(UseSocket, HMaster, buf, 1, &proc->overlapped);
 	}
     }
 }

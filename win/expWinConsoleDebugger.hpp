@@ -210,13 +210,13 @@ private:
     BOOL WriteSubprocessMemory	(Process *, LPVOID, LPVOID, DWORD);
     int ReadSubprocessStringA	(Process *, PVOID, PCHAR, int);
     int ReadSubprocessStringW	(Process *, PVOID, PWCHAR, int);
-    void CreateVtSequence	(Process *proc, COORD newPos, DWORD n);
+    void CreateVtSequence	(Process *, COORD, DWORD);
 
     // The arrays of functions where we set breakpoints
     //
-    BreakInfo BreakArrayKernel32[20];
-    BreakInfo BreakArrayUser32[2];
-    DllBreakpoints BreakPoints[3];
+    BreakInfo	    BreakArrayKernel32[20];
+    BreakInfo	    BreakArrayUser32[2];
+    DllBreakpoints  BreakPoints[3];
 
     // private vars
     //
